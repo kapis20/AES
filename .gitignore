@@ -1,52 +1,33 @@
-# Prerequisites
-*.d
+# Autosave files
+*.asv
+*.m~
+*.autosave
+*.slx.r*
+*.mdl.r*
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+# Derived content-obscured files
+*.p
 
-# Linker output
-*.ilk
-*.map
-*.exp
+# Compiled MEX files
+*.mex*
 
-# Precompiled Headers
-*.gch
-*.pch
+# Packaged app and toolbox files
+*.mlappinstall
+*.mltbx
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+# Deployable archives
+*.ctf
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+# Generated helpsearch folders
+helpsearch*/
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+# Code generation folders
+slprj/
+sccprj/
+codegen/
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+# Cache files
+*.slxc
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+# Cloud based storage dotfile
+.MATLABDriveTag
