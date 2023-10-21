@@ -1,3 +1,9 @@
+function state = SubBytes(state)
+%SUBBYTES function substitutes each byte of the message in state to the
+%corresponding byte from the AES S-box.
+%Input: state (message) Output state (encrypted message) 
+
+
 % Define the AES S-box
 Sbox = [
     0x63 0x7C 0x77 0x7B 0xF2 0x6B 0x6F 0xC5 0x30 0x01 0x67 0x2B 0xFE 0xD7 0xAB 0x76;
@@ -17,15 +23,27 @@ Sbox = [
     0xE1 0xF8 0x98 0x11 0x69 0xD9 0x8E 0x94 0x9B 0x1E 0x87 0xE9 0xCE 0x55 0x28 0xDF;
     0x8C 0xA1 0x89 0x0D 0xBF 0xE6 0x42 0x68 0x41 0x99 0x2D 0x0F 0xB0 0x54 0xBB 0x16
 ];
+ %need to iterate through state 
+ n = length(state);
 
-%assign an array of zeros that will be used to store the transformed message 
+for row = 1:n
+    %matricex indexing(row,col)
+        for col= 1:n
+        
+        %shift the bits four position to the right to extract the 4
+        %leftmost bits +1 as 0 in matrix Sbox = 1
+        row1 = bitshift(state(row,col), -4)+1;
+        
+        %0x0F in binary is 00001111 and by using and gate we extract
+        %rightmost 4 bits as the rest is set to 0 
+        col1 = bitand(state(row,col),0x0F)+1;
+        
+        
+       
+        %get a message from Sbox 
+        state(row,col) = Sbox(row1,col1);
+       
+       
+        end
+end
 
-SubBytes = zeros(4); %4x4 size
-
-
-%Transformation proces :
-%We start with the Left Most top bit of the plain text (state) 
-%In Hex, lefttmost 4 bits of the byte are used as a row value in the Sbox
-%The right 4 bits of the byte represent column
-%The message (byte) is then replaced with the corresponding value from the 
-%Sbox 
