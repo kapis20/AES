@@ -46,4 +46,6 @@ for row = 1:n
        
         end
 end
-
+%% instead of the lookup table use the operation, do it on the fly 
+% how to generate the algorithm, sbox 
+% do it on the fly 
