@@ -27,7 +27,7 @@ while a~=0
 end
 
 %polynomial reduction of the product
-product = reduction(product);
+product = uint8(reduction(product));
 end
 end
     
