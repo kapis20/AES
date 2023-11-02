@@ -3,19 +3,19 @@ function [output] = conversion(input, enable)
     %Convert from 128-bit value to a 4x4 byte Matrix
     %or vice-versa depending on enable value
 
-    if enable == 1
+    if enable == 0
         %convert from 128-bit value to 4x4 byte Matrix
 
-        output = [ uint8(bin2dec(input(1:8))),      uint8(bin2dec(input(9:16))),        uint8(bin2dec(input(17:24))),       uint8(bin2dec(input(25:32))); ...
-                   uint8(bin2dec(input(33:40))),    uint8(bin2dec(input(41:48))),       uint8(bin2dec(input(49:56))),       uint8(bin2dec(input(57:64))); ...
-                   uint8(bin2dec(input(65:72))),    uint8(bin2dec(input(73:80))),       uint8(bin2dec(input(81:88))),       uint8(bin2dec(input(89:96))); ...
-                   uint8(bin2dec(input(97:104))),   uint8(bin2dec(input(105:112))),     uint8(bin2dec(input(113:120))),     uint8(bin2dec(input(121:128)))];
+        output = [ uint8(hex2dec(input(1:2))),  uint8(hex2dec(input(9:10))),    uint8(hex2dec(input(17:18))),   uint8(hex2dec(input(25:26))); ...
+                   uint8(hex2dec(input(3:4))),  uint8(hex2dec(input(11:12))),   uint8(hex2dec(input(19:20))),   uint8(hex2dec(input(27:28))); ...
+                   uint8(hex2dec(input(5:6))),  uint8(hex2dec(input(13:14))),   uint8(hex2dec(input(21:22))),   uint8(hex2dec(input(29:30))); ...
+                   uint8(hex2dec(input(7:8))),  uint8(hex2dec(input(15:16))),   uint8(hex2dec(input(23:24))),   uint8(hex2dec(input(31:32)))];
 
-    elseif enable == 0
+    elseif enable == 1
         %convert from 4x4 byte matrix to 128-bit value
 
-        temp1 = strcat( dec2bin(input(1), 8), dec2bin(input(5), 8), dec2bin(input(9), 8), dec2bin(input(13), 8), dec2bin(input(2), 8), dec2bin(input(6), 8), dec2bin(input(10), 8), dec2bin(input(14), 8));
-        temp2 = strcat( dec2bin(input(3), 8), dec2bin(input(7), 8), dec2bin(input(11), 8), dec2bin(input(15), 8), dec2bin(input(4), 8), dec2bin(input(8), 8), dec2bin(input(12), 8), dec2bin(input(16), 8));
+        temp1 = strcat( dec2hex(input(1), 2), dec2hex(input(2), 2), dec2hex(input(3), 2), dec2hex(input(4), 2), dec2hex(input(5), 2), dec2hex(input(6), 2), dec2hex(input(7), 2), dec2hex(input(8), 2));
+        temp2 = strcat( dec2hex(input(9), 2), dec2hex(input(10), 2), dec2hex(input(11), 2), dec2hex(input(12), 2), dec2hex(input(13), 2), dec2hex(input(14), 2), dec2hex(input(15), 2), dec2hex(input(16), 2));
 
         output = strcat(temp1, temp2);
 

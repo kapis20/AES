@@ -32,13 +32,12 @@ for i = 1:num_of_keys
     r_key(:, col+2) = bitxor(r_key(:, (col+1)), r_key(:, (col-2)));
     r_key(:, col+3) = bitxor(r_key(:, (col+2)), r_key(:, (col-1)));
     
-    
 end
 
 %seperate the keys from the matrix and generate an array of round keys
 for j = 1:num_of_keys
     
-    round_key(:,:,j) = r_key(:, (j*4)+1 : (j*4) +4 );
+    round_key(:,:,j) = uint8(r_key(:, (j*4)+1 : (j*4) +4 ));
     
 end
 

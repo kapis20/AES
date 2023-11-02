@@ -1,6 +1,7 @@
 function [output] = InvShiftRows(input)
     
     %Shifts the rows of the matrix by a pre-determined amount
+    %The inverse is used for decryption
 
     output(1,:) = input(1,:);                       %Row 1
     output(2,:) = circshift(input(2,:), [0 1]);    %Row 2

@@ -4,4 +4,4 @@ function [output] = AddRoundKey(input, key)
     
     output = bitxor(key, input);
 
-end
+en

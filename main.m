@@ -4,9 +4,7 @@ function [output] = main(input, key, enable)
     %input      Our main data that we want to encrypt/decrypt
     %key        What we use to let us encrypt/decrypt
     %enable     Tells the program if we want to encrypt/decrypt
-    %           enable = 0: encrypt, enable = 1: decrypt
-
-    
+    %           enable = 0: encrypt, enable = 1: decrypt    
     
     %converting input to state
     state = conversion(input, 0);
@@ -15,46 +13,68 @@ function [output] = main(input, key, enable)
     
     %generate roundkeys
     roundKey = getRoundKey(cipher_key);
-    
-    %XOR the state with the original key
-    state = AddRoundKey(state, cipher_key);
-    
-    
+
     %encryption
-    if enable == 0 
-        for i = 1:9       
-            %go through subbytes, shiftrows, mixcolumns and addroundkey 9x
+    if enable == 0
+        disp("Encryption");
+
+        %XOR the state with the original key
+        state = AddRoundKey(state, cipher_key);
+        disp(state);
+
+        for i = 1:9     
+            %go through SubBytes, ShiftRows, MixColumns and AddRoundKey 9x
             state = SubBytes(state);
+            disp(state);
             state = ShiftRows(state);
-            %t3 = MixColumns(st2);
-            state = AddRoundKey(state, roundKey(:,:,1)); 
+            disp(state);
+            state = MixColumns(state);
+            disp(state);
+            state = AddRoundKey(state, roundKey(:,:,i));
+            disp(state);
         end
         
         %final round without mix columns
         state = SubBytes(state);
+        disp(state);
         state = ShiftRows (state);
-        state = AddRoundKey(state, roundKey(:,:,10)); 
+        disp(state);
+        state = AddRoundKey(state, roundKey(:,:,10));
+        disp(state);
     
         output = conversion(state, 1);
+        disp(output);
     
-    %decription
+    %decryption
     elseif enable == 1
-        for i = 1:9
-            %go through subbytes, shiftrows, mixcolumns and addroundkey 9x
-            state = InvSubBytes(state);
+        disp("Decryption");
+
+        %XOR the state with the original key
+        state = AddRoundKey(state, roundKey(:,:,10));
+        disp(state);
+
+        for i = 9:-1:1
+            %go through SubBytes, ShiftRows, MixColumns and AddRoundKey 9x
             state = InvShiftRows(state);
-            %t3 = MixColumns(st2);
-            state = AddRoundKey(state, roundKey(:,:,(11-i))); 
+            disp(state);
+            state = InvSubBytes(state);
+            disp(state);
+            state = AddRoundKey(state, roundKey(:,:,i));
+            disp(state);
+            state = InvMixColumns(state);
+            disp(state);
         end
         
         %final round without mix columns
-        state = InvSubBytes(state);
         state = InvShiftRows (state);
-        state = AddRoundKey(state, roundKey(:,:,1)); 
+        disp(state);
+        state = InvSubBytes(state);
+        disp(state);
+        state = AddRoundKey(state, cipher_key);
+        disp(state);
     
         output = conversion(state, 1);
-            
-        
+        disp(output);
 
     end
 
