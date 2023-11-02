@@ -24,11 +24,11 @@ Sbox = [
     0x8C 0xA1 0x89 0x0D 0xBF 0xE6 0x42 0x68 0x41 0x99 0x2D 0x0F 0xB0 0x54 0xBB 0x16
 ];
  %need to iterate through state 
- n = length(state);
+ n = size(state);
 
-for row = 1:n
+for row = 1:n(1)
     %matricex indexing(row,col)
-        for col= 1:n
+        for col= 1:n(2)
         
         %shift the bits four position to the right to extract the 4
         %leftmost bits +1 as 0 in matrix Sbox = 1
@@ -46,6 +46,3 @@ for row = 1:n
        
         end
 end
-%% instead of the lookup table use the operation, do it on the fly 
-% how to generate the algorithm, sbox 
-% do it on the fly 
