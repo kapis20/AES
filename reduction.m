@@ -5,30 +5,38 @@ result = x;
 
 %convert input to array of bits
 bits = decimalToBinaryVector (x);
-num = length(bits);
+bit_num = length(bits);
 
 %define reduction polynomial (100011011)
 r_poly = 283;
 
 temp = x;
 
-while num > 8 
+while bit_num > 8 
     %get the first 9 bits of x
-    msb = bitshift(temp, -(num-9));
+    msb = bitshift(temp, -(bit_num-9));
     temp_msb = bitxor(msb, r_poly);
     v = decimalToBinaryVector (temp);
     lsb = v(1, 10:end);
-    str_lsb = num2str(lsb);
-    temp_lsb = bin2dec(str_lsb);
+    %temp_lsb = num2str(lsb);
+    temp_lsb = num2str(lsb);
+    %temp_lsb = bin2dec(str_lsb);
+    
     
     %concat
+    %convert to decimal and then to string so string can be combined
     temp_msb = dec2bin(temp_msb);
-    temp_lsb = dec2bin(temp_lsb);
-    temp = strcat(temp_msb,temp_lsb);
+     temp_msb = num2str(temp_msb);
+    %combine MSB and LSB
+    temp=(strcat(temp_msb,temp_lsb));
+    % remove empty spaces to get right concat and number of bits
+    temp=temp(find(~isspace(temp)));
+ 
+    bit_num= length(temp);
+
     temp = bin2dec(temp);
     
-    %reevaluate num
-    num = length(temp);
+  
     
 end
 
