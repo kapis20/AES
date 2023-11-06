@@ -1,4 +1,7 @@
 function s_value = inv_sbox(input)
+%The function to generate the inverse SBox 
+
+%written by B K Teo
 
 %convert input to decimal and fix it to 8 bits for circular shift
 input_bin = dec2bin(input, 8);

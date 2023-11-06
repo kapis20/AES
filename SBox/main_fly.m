@@ -1,4 +1,4 @@
-function [output] = main(input, key, enable)
+function [output] = main_fly(input, key, enable)
     
     %Main function to decide control of the AES
     %input      Our main data that we want to encrypt/decrypt
@@ -25,14 +25,14 @@ function [output] = main(input, key, enable)
 
         for i = 1:9     
             %go through SubBytes, ShiftRows, MixColumns and AddRoundKey 9x
-            state = SubBytes(state);
+            state = SubBytes_fly(state);
             state = ShiftRows(state);
             state = MixColumns(state);
             state = AddRoundKey(state, roundKey(:,:,i));
         end
         
         %final round without mix columns
-        state = SubBytes(state);
+        state = SubBytes_fly(state);
         state = ShiftRows(state);
         state = AddRoundKey(state, roundKey(:,:,10));    
         output = conversion(state, 1);
@@ -47,14 +47,14 @@ function [output] = main(input, key, enable)
         for i = 9:-1:1
             %go through SubBytes, ShiftRows, MixColumns and AddRoundKey 9x
             state = InvShiftRows(state);
-            state = InvSubBytes(state);
+            state = InvSubBytes_fly(state);
             state = AddRoundKey(state, roundKey(:,:,i));
             state = InvMixColumns(state);
         end
         
         %final round without mix columns
         state = InvShiftRows(state);
-        state = InvSubBytes(state);
+        state = InvSubBytes_fly(state);
         state = AddRoundKey(state, cipher_key);
         output = conversion(state, 1);
 

@@ -3,6 +3,8 @@ function state = SubBytes(state)
 %corresponding byte from the AES S-box.
 %Input: state (message) Output state (encrypted message) 
 
+%written by K Sikorski
+
 
 % Define the AES S-box
 Sbox = [

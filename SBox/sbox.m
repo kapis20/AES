@@ -1,4 +1,7 @@
 function s_value = sbox(a)
+%Function to generate the SBox 
+
+%written by B K Teo
 
 %calculate the inverse multiplicative of input
 inv = uint8(invMult(a));

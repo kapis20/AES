@@ -3,6 +3,8 @@ function state = InvSubBytes(state)
 %message state with a corresponding byte from the inverse AES S-box 
 %Input: state (encrypted message), Output: state (decrypted message)
 
+%written by K Sikorski
+
 % Define the inverse AES S-box
 InvSbox = [
     0x52 0x09 0x6A 0xD5 0x30 0x36 0xA5 0x38 0xBF 0x40 0xA3 0x9E 0x81 0xF3 0xD7 0xFB;

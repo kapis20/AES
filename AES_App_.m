@@ -1,5 +1,8 @@
 classdef AES_App_ < matlab.apps.AppBase
 
+    %The Dashboard app to interact with the AES algorithm 
+    %written by K Sikorski 
+
     % Properties that correspond to app components
     properties (Access = public)
         AESInspectorUIFigure        matlab.ui.Figure

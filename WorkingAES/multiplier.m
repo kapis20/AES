@@ -1,5 +1,7 @@
 function product = multiplier(a,b)
 
+%written by B K Teo
+
 %define case where one of the bytes are 0
 if (a==0 || b == 0)
     product = 0;

@@ -1,6 +1,8 @@
 function result = reduction(x)
 
 %if number of bits is <= 8, return original input
+
+%written by B K Teo
 result = x;
 
 %find the initial number of bits
