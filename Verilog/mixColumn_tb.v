@@ -2,11 +2,16 @@
 
 module tb_mixColumns ();
 
+
+
 reg [127:0] input_state;
-
+reg clk=0;
 wire [127:0] output_state;
+wire ready;
 
-mixColumns mc(input_state, output_state);
+mixColumns UUT (.input_s(input_state), .output_s(output_state), .clk(clk), .ready(ready));
+
+always #5 clk =~clk;
 
 initial begin
     $monitor("The input is %h and the output is %h", input_state, output_state);
