@@ -7,6 +7,7 @@ module mixColumns (input_s, output_s);
 input [127:0] input_s;
 input clk;
 output reg [127:0] output_s;
+output reg ready;
 
 reg[255:0] TempOut;
 
