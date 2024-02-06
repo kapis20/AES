@@ -3,11 +3,11 @@
 
 // modified by K Sikorski
 
-module mixColumns (input_s, output_s);
+module mixColumns (clk, input_s, output_s); 
 input [127:0] input_s;
 input clk;
 output reg [127:0] output_s;
-output reg ready;
+//output reg ready;
 
 reg[255:0] TempOut;
 
@@ -20,7 +20,7 @@ reg[255:0] TempOut;
         mult instance_2( .multiplicand(input_s[8:15]), .multiplier(3'b001), .product(TempOut[247:240]));
         //second row [01 02 03 01] a = 0
         mult instance_3( .multiplicand(input_s[0:7]), .multiplier(3'b000), .product(TempOut[239:232]));
-        mult instance_4(.multiplicand(input_s[16:23]), .multiplier(3'b001), .prodcut(TempOut[231: 224]));
+        mult instance_4(.multiplicand(input_s[16:23]), .multiplier(3'b001), .product(TempOut[231: 224]));
         
         //third row [01 01 02 03] a=o
         mult intance_5( .multiplicand(input_s[16:23]), .multiplier(3'b000), .product(TempOut[223 : 216])); 
@@ -30,10 +30,10 @@ reg[255:0] TempOut;
         mult instance_7 (.multiplicand(input_s[0:7]), . multiplier(3'b001), .product(TempOut [207:200]));
         mult instance_8 (.multiplicand(input_s [24:31]), .multiplier(3'b000), .product(TempOut [199:192]));
         // first row [02 03 01 01] a = 1
-        mult instance_9 (.multiplicand(input_s [32:39]), .multiplier(3'b000), .prodcut(TempOut [191:184]));
-        mult instance_10(.multiplicand(input_s [40:47]), .multiplier(3'b001), .prodcut(TempOut [183:176]));
+        mult instance_9 (.multiplicand(input_s [32:39]), .multiplier(3'b000), .product(TempOut [191:184]));
+        mult instance_10(.multiplicand(input_s [40:47]), .multiplier(3'b001), .product(TempOut [183:176]));
         //second row [01 02 03 01] a = 1
-        mult instance_11 (.multiplicand(input_s [32:39]), .multiplier(3'b000), .prodcut(TempOut [175:168]));
+        mult instance_11 (.multiplicand(input_s [32:39]), .multiplier(3'b000), .product(TempOut [175:168]));
         mult instance_12 (.multiplicand(input_s [48:55]), .multiplier(3'b001), .product(TempOut [167:160]));
         
          //third row [01 01 02 03] a=1 
@@ -45,11 +45,11 @@ reg[255:0] TempOut;
         
          // first row [02 03 01 01] a = 2
         mult instance_17 (.multiplicand(input_s [64:71]), .multiplier(3'b000),.product(TempOut [127:120]));
-        mult instance_18 (.multiplicand(input_s [72:79]), .multiplier(3'b001),. prodcut(TempOut [119:112]));
+        mult instance_18 (.multiplicand(input_s [72:79]), .multiplier(3'b001),. product(TempOut [119:112]));
         
         //second row [01 02 03 01] a = 2
         mult instance_19 (.multiplicand(input_s [64:71]),.multiplier(3'b000), .product(TempOut [111:104]));
-        mult instance_20 (.multiplicand(input_s [80:87]), .multiplier(3'b001), .prodcut(TempOut [103:96]));        
+        mult instance_20 (.multiplicand(input_s [80:87]), .multiplier(3'b001), .product(TempOut [103:96]));        
         
         //third row [01 01 02 03] a=2
         mult instance_21 (.multiplicand(input_s [80:87]), .multiplier(3'b000), .product(TempOut [95:88]));
@@ -84,7 +84,7 @@ reg[255:0] TempOut;
         // XOR 2nd a = 0
         output_s [8:15] = input_s [0:7] ^TempOut[239:232] ^TempOut[231: 224] ^input_s[24:31];
         // XOR 3rd  a=0 
-        outrput_s [16:23] = input_s[0:7] ^ input_s [8:15] ^TempOut[223 : 216] ^TempOut[215 :208];
+       output_s [16:23] = input_s[0:7] ^ input_s [8:15] ^TempOut[223 : 216] ^TempOut[215 :208];
         // XOR 4th a = 0
         output_s [24:31] = TempOut [207:200] ^input_s [8:15]^ input_s [16:23] ^ TempOut [199:192]; 
         
