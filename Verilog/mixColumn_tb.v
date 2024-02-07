@@ -7,9 +7,9 @@ module tb_mixColumns ();
 reg [127:0] input_state;
 reg clk=0;
 wire [127:0] output_state;
-wire ready;
+//wire ready;
 
-mixColumns UUT (.input_s(input_state), .output_s(output_state), .clk(clk), .ready(ready));
+mixColumns UUT (.input_s(input_state), .output_s(output_state), .clk(clk));
 
 always #5 clk =~clk;
 
