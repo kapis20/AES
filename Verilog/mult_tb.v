@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module mult_tb;
+whmodule mult_tb;
 
 reg [7:0] num;
 reg [2:0] mode;

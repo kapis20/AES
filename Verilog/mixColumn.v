@@ -16,110 +16,111 @@ output [255:0] TempOut;
 //case (input_s)
      
         // first row [02 03 01 01] a = 0
-        mult instance_1(.clock(clk), .multiplicand(input_s[0:7]), .multiplier(3'b000), .product(TempOut[255:248]));
-        mult instance_2(.clock(clk), .multiplicand(input_s[8:15]), .multiplier(3'b001), .product(TempOut[247:240]));
+        mult instance_1(.clock(clk), .multiplicand(input_s[7:0]), .multiplier(3'b000), .product(TempOut[255:248]));
+        mult instance_2(.clock(clk), .multiplicand(input_s[15:8]), .multiplier(3'b001), .product(TempOut[247:240]));
         //second row [01 02 03 01] a = 0
-        mult instance_3(.clock(clk), .multiplicand(input_s[0:7]), .multiplier(3'b000), .product(TempOut[239:232]));
-        mult instance_4(.clock(clk),.multiplicand(input_s[16:23]), .multiplier(3'b001), .product(TempOut[231: 224]));
+        mult instance_3(.clock(clk), .multiplicand(input_s[7:0]), .multiplier(3'b000), .product(TempOut[239:232]));
+        mult instance_4(.clock(clk),.multiplicand(input_s[23:16]), .multiplier(3'b001), .product(TempOut[231: 224]));
         
         //third row [01 01 02 03] a=o
-        mult intance_5( .clock(clk),.multiplicand(input_s[16:23]), .multiplier(3'b000), .product(TempOut[223 : 216])); 
-        mult instance_6(.clock(clk),. multiplicand(input_s[24:31]), .multiplier(3'b001), .product(TempOut[215 :208])); 
+        mult intance_5( .clock(clk),.multiplicand(input_s[23:16]), .multiplier(3'b000), .product(TempOut[223 : 216])); 
+        mult instance_6(.clock(clk),. multiplicand(input_s[31:24]), .multiplier(3'b001), .product(TempOut[215 :208])); 
         
         //fourth row [03 01 01 02] a =0
-        mult instance_7 (.clock(clk),.multiplicand(input_s[0:7]), . multiplier(3'b001), .product(TempOut [207:200]));
-        mult instance_8 (.clock(clk),.multiplicand(input_s [24:31]), .multiplier(3'b000), .product(TempOut [199:192]));
+        mult instance_7 (.clock(clk),.multiplicand(input_s[7:0]), . multiplier(3'b001), .product(TempOut [207:200]));
+        mult instance_8 (.clock(clk),.multiplicand(input_s [31:24]), .multiplier(3'b000), .product(TempOut [199:192]));
         // first row [02 03 01 01] a = 1
-        mult instance_9 (.clock(clk),.multiplicand(input_s [32:39]), .multiplier(3'b000), .product(TempOut [191:184]));
-        mult instance_10(.clock(clk),.multiplicand(input_s [40:47]), .multiplier(3'b001), .product(TempOut [183:176]));
+        mult instance_9 (.clock(clk),.multiplicand(input_s [39:32]), .multiplier(3'b000), .product(TempOut [191:184]));
+        mult instance_10(.clock(clk),.multiplicand(input_s [47:40]), .multiplier(3'b001), .product(TempOut [183:176]));
         //second row [01 02 03 01] a = 1
-        mult instance_11 (.clock(clk),.multiplicand(input_s [32:39]), .multiplier(3'b000), .product(TempOut [175:168]));
-        mult instance_12 (.clock(clk),.multiplicand(input_s [48:55]), .multiplier(3'b001), .product(TempOut [167:160]));
+        mult instance_11 (.clock(clk),.multiplicand(input_s [39:32]), .multiplier(3'b000), .product(TempOut [175:168]));
+        mult instance_12 (.clock(clk),.multiplicand(input_s [55:48]), .multiplier(3'b001), .product(TempOut [167:160]));
         
          //third row [01 01 02 03] a=1 
-         mult instance_13 (.clock(clk),.multiplicand(input_s [48:55]), .multiplier(3'b000), .product(TempOut  [159:152]));
-         mult instance_14 (.clock(clk),. multiplicand(input_s [56:63]), .multiplier(3'b001), .product(TempOut  [151:144]));
+         mult instance_13 (.clock(clk),.multiplicand(input_s [55:48]), .multiplier(3'b000), .product(TempOut  [159:152]));
+         mult instance_14 (.clock(clk),. multiplicand(input_s [63:56]), .multiplier(3'b001), .product(TempOut  [151:144]));
          //fourth row [03 01 01 02] a =1
-        mult instance_15 (.clock(clk),.multiplicand(input_s [32:39]), .multiplier(3'b001), .product(TempOut [143:136]));
-        mult instance_16 (.clock(clk),.multiplicand(input_s [56:63]), . multiplier(3'b000),.product(TempOut [135:128]));          
+        mult instance_15 (.clock(clk),.multiplicand(input_s [39:32]), .multiplier(3'b001), .product(TempOut [143:136]));
+        mult instance_16 (.clock(clk),.multiplicand(input_s [63:56]), . multiplier(3'b000),.product(TempOut [135:128]));          
         
          // first row [02 03 01 01] a = 2
-        mult instance_17 (.clock(clk),.multiplicand(input_s [64:71]), .multiplier(3'b000),.product(TempOut [127:120]));
-        mult instance_18 (.clock(clk),.multiplicand(input_s [72:79]), .multiplier(3'b001),. product(TempOut [119:112]));
+        mult instance_17 (.clock(clk),.multiplicand(input_s [71:64]), .multiplier(3'b000),.product(TempOut [127:120]));
+        mult instance_18 (.clock(clk),.multiplicand(input_s [79:72]), .multiplier(3'b001),. product(TempOut [119:112]));
         
         //second row [01 02 03 01] a = 2
-        mult instance_19 (.clock(clk),.multiplicand(input_s [64:71]),.multiplier(3'b000), .product(TempOut [111:104]));
-        mult instance_20 (.clock(clk),.multiplicand(input_s [80:87]), .multiplier(3'b001), .product(TempOut [103:96]));        
+        mult instance_19 (.clock(clk),.multiplicand(input_s [71:64]),.multiplier(3'b000), .product(TempOut [111:104]));
+        mult instance_20 (.clock(clk),.multiplicand(input_s [87:80]), .multiplier(3'b001), .product(TempOut [103:96]));        
         
         //third row [01 01 02 03] a=2
-        mult instance_21 (.clock(clk),.multiplicand(input_s [80:87]), .multiplier(3'b000), .product(TempOut [95:88]));
-        mult instance_22 (.clock(clk),.multiplicand(input_s [88:95]), .multiplier(3'b001), .product(TempOut [87:80]));
+        mult instance_21 (.clock(clk),.multiplicand(input_s [87:80]), .multiplier(3'b000), .product(TempOut [95:88]));
+        mult instance_22 (.clock(clk),.multiplicand(input_s [95:88]), .multiplier(3'b001), .product(TempOut [87:80]));
         
         //fourth row [03 01 01 02] a =2
-        mult instance_23 (.clock(clk),.multiplicand(input_s [64:71]), .multiplier(3'b001), .product(TempOut [79:72]));
-        mult instance_24 (.clock(clk),.multiplicand(input_s [88:95]), .multiplier(3'b000), .product(TempOut [71:64]));
+        mult instance_23 (.clock(clk),.multiplicand(input_s [71:64]), .multiplier(3'b001), .product(TempOut [79:72]));
+        mult instance_24 (.clock(clk),.multiplicand(input_s [95:88]), .multiplier(3'b000), .product(TempOut [71:64]));
         
         // first row [02 03 01 01] a = 3
-        mult instance_25 (.clock(clk),.multiplicand(input_s [96:103]),.multiplier(3'b000),.product(TempOut [63:56]));
-        mult instance_26 (.clock(clk),.multiplicand(input_s [104:111]),.multiplier(3'b001),.product(TempOut [55:48]));
+        mult instance_25 (.clock(clk),.multiplicand(input_s [103:96]),.multiplier(3'b000),.product(TempOut [63:56]));
+        mult instance_26 (.clock(clk),.multiplicand(input_s [111:104]),.multiplier(3'b001),.product(TempOut [55:48]));
         
          //second row [01 02 03 01] a = 3
-        mult instance_27 (.clock(clk),.multiplicand(input_s [96:103]), .multiplier(3'b000), .product(TempOut [47:40]));
-        mult instance_28 (.clock(clk),.multiplicand(input_s [112:119]), .multiplier(3'b001), .product(TempOut [39:32]));    
+        mult instance_27 (.clock(clk),.multiplicand(input_s [103:96]), .multiplier(3'b000), .product(TempOut [47:40]));
+        mult instance_28 (.clock(clk),.multiplicand(input_s [119:112]), .multiplier(3'b001), .product(TempOut [39:32]));    
         
            //third row [01 01 02 03] a=3
-        mult instance_29 (.clock(clk),.multiplicand(input_s [112:119]), .multiplier(3'b000), .product(TempOut [31:24]));
-        mult instance_30 (.clock(clk),.multiplicand(input_s [120:127]), .multiplier(3'b001), .product(TempOut [23:16]));
+        mult instance_29 (.clock(clk),.multiplicand(input_s [119:112]), .multiplier(3'b000), .product(TempOut [31:24]));
+        mult instance_30 (.clock(clk),.multiplicand(input_s [127:120]), .multiplier(3'b001), .product(TempOut [23:16]));
         
           //fourth row [03 01 01 02] a =3
-        mult instance_31 (.clock(clk),.multiplicand(input_s [96:103]), .multiplier(3'b001), .product(TempOut [15:8]));
-        mult instance_32 (.clock(clk),.multiplicand(input_s [120:127]), .multiplier(3'b000), .product(TempOut [7:0]));
+        mult instance_31 (.clock(clk),.multiplicand(input_s [103:96]), .multiplier(3'b001), .product(TempOut [15:8]));
+        mult instance_32 (.clock(clk),.multiplicand(input_s [127:120]), .multiplier(3'b000), .product(TempOut [7:0]));
  
  
  /////////////////////////////////////////////////////////////////////////////////////////////////////   
  
         always @(posedge clk) begin     
+        //First column
         //XOR 1st a = 0
-        output_s [0:7] = TempOut[255:248] ^TempOut[247:240] ^input_s[16:23] ^ input_s[24:31];
+        output_s [7:0] = TempOut[255:248] ^TempOut[247:240] ^input_s[23:16] ^ input_s[31:24];
         // XOR 2nd a = 0
-        output_s [8:15] = input_s [0:7] ^TempOut[239:232] ^TempOut[231: 224] ^input_s[24:31];
+        output_s [15:8] = input_s [7:0] ^TempOut[239:232] ^TempOut[231: 224] ^input_s[31:24];
         // XOR 3rd  a=0 
-       output_s [16:23] = input_s[0:7] ^ input_s [8:15] ^TempOut[223 : 216] ^TempOut[215 :208];
+       output_s [23:16] = input_s[7:0] ^ input_s [15:8] ^TempOut[223 : 216] ^TempOut[215 :208];
         // XOR 4th a = 0
-        output_s [24:31] = TempOut [207:200] ^input_s [8:15]^ input_s [16:23] ^ TempOut [199:192]; 
+        output_s [31:24] = TempOut [207:200] ^input_s [15:8]^ input_s [23:16] ^ TempOut [199:192]; 
         
         
         // XOR 1st a =1 
-        output_s [32:39] = TempOut [191:184] ^ TempOut [183:176] ^ input_s[48:55] ^ input_s [56 :63];
+        output_s [39:32] = TempOut [191:184] ^ TempOut [183:176] ^ input_s[55:48] ^ input_s [63 :56];
         //XOR 2nd a =1 
-        output_s [40:47] =input_s [32:39] ^TempOut [175:168] ^TempOut [167:160] ^input_s [56:63];
+        output_s [47:40] =input_s [39:32] ^TempOut [175:168] ^TempOut [167:160] ^input_s [63:56];
         // Xor 3rd a =1 
-        output_s  [48:55] = input_s [32:39] ^ input_s [40:47] ^TempOut  [159:152] ^TempOut  [151:144];
+        output_s  [55:48] = input_s [39:32] ^ input_s [47:40] ^TempOut  [159:152] ^TempOut  [151:144];
         //XOR 4th a =1 
-        output_s [56:63] =TempOut [143:136]^ input_s [40:47] ^input_s [48:55] ^TempOut [135:128]; 
+        output_s [63:56] =TempOut [143:136]^ input_s [47:40] ^input_s [55:48] ^TempOut [135:128]; 
         
         
         //Xor 1st a=2 
-        output_s [64:71] = TempOut [127:120]^TempOut [119:112]^ input_s [80:87] ^ input_s [88:95];
+        output_s [71:64] = TempOut [127:120]^TempOut [119:112]^ input_s [87:80] ^ input_s [95:88];
         
         // XOR 2nd a =2 
-        output_s [72:79] = input_s [64:71]^ TempOut [111:104] ^TempOut [103:96] ^input_s [88:95];
+        output_s [79:72] = input_s [71:64]^ TempOut [111:104] ^TempOut [103:96] ^input_s [95:88];
         
         //XOR 3rd row a =2 
-        output_s [80:87] = input_s [64:71]^ input_s [72:79] ^TempOut [95:88] ^TempOut [87:80];
+        output_s [87:80] = input_s [71:64]^ input_s [79:72] ^TempOut [95:88] ^TempOut [87:80];
         
         //XOR 4th row a =2 
-        output_s [88:95] = TempOut [79:72]^ input_s [72:79] ^ input_s [80:87] ^TempOut [71:64];
+        output_s [95:88] = TempOut [79:72]^ input_s [79:72] ^ input_s [87:80] ^TempOut [71:64];
         
         //XOR 1st row a = 3
-        output_s [96:103] =TempOut [63:56]^TempOut [55:48] ^ input_s [112:119] ^input_s[120:127];
+        output_s [103:96] =TempOut [63:56]^TempOut [55:48] ^ input_s [119:112] ^input_s[127:120];
         
         //XOR 2nd row a = 3 
-        output_s [104:111] = input_s [96:103] ^TempOut [47:40] ^TempOut [47:40] ^ input_s [120:127];
+        output_s [111:104] = input_s [103:96] ^TempOut [47:40] ^TempOut [47:40] ^ input_s [127:120];
         
         //XOR 3rd row a =3 
-        output_s [112:119] = input_s [96:103] ^ input_s [104:111] ^TempOut [31:24] ^TempOut [23:16];
+        output_s [119:112] = input_s [103:96] ^ input_s [111:104] ^TempOut [31:24] ^TempOut [23:16];
         //XOR 4th row a = 3 
-        output_s [120:127] = TempOut [15:8]^ input_s [104:111] ^ input_s [112:119] ^TempOut [7:0];
+        output_s [127:120] = TempOut [15:8]^ input_s [111:104] ^ input_s [119:112] ^TempOut [7:0];
         end
 endmodule
