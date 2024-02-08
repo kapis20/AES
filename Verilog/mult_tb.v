@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-whmodule mult_tb;
+module mult_tb;
 
 reg [7:0] num;
 reg [2:0] mode;
@@ -15,11 +15,11 @@ initial begin
     $monitor("The multiplicand is %d, the multiplier is %d and the output is %d", num, mode, prod);
 
     #100
-    num = 8'b11010001;
+    num = 8'b11011110;
     mode = 8'b000;
 
     #100
-    num = 8'b11010001;
+    num = 8'b10010110;
     mode = 8'b001;
 
     #100
