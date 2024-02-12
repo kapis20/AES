@@ -34,17 +34,17 @@ module tb_shiftRows;
         $display("Starting Test!");
         
         $display("===ENCRYPT===");
-        $display("Data In:  %b", data_in);  
+        $display("Data In:  %h", data_in);  
         #10
-        $display("Data Out: %b", data_out);
+        $display("Data Out: %h", data_out);
         
         // send output data from encrypt to input data for decrypt
         data_in_i = data_out;
         
         $display("===DECRYPT===");
-        $display("Data In:  %b", data_in_i);  
+        $display("Data In:  %h", data_in_i);  
         #10
-        $display("Data Out: %b", data_out_i);
+        $display("Data Out: %h", data_out_i);
         
         // Confirm that both modules are capable of doing the inverse of one another
         if (data_in == data_out_i) begin
