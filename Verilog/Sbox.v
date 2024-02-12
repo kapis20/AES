@@ -1,22 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 03.02.2024 16:45:18
-// Design Name: 
-// Module Name: Sbox
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: Sbox 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+
+// The Sbox module with Rijndael Sbox table that takes one byte and encypts it 
 // Written by K Sikorski 
 //////////////////////////////////////////////////////////////////////////////////
 
