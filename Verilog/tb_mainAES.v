@@ -7,7 +7,7 @@ module tb_mainAES;
     // Declare inputs
     reg clk = 0;
     reg [127:0] aes_input = 128'h0123456789ABCDEF0123456789000000;
-    reg [127:0] aes_cipher= 128'h0123456789ABCDEF0123456789000000;
+    reg [127:0] aes_key= 128'h0123456789ABCDEF0123456789000000;
     
     // Declare outputs
     wire [127:0] aes_output;
@@ -28,7 +28,7 @@ module tb_mainAES;
         $display("AES Encryption");
         
         $display("Input Value: %h", aes_input);
-        $display("Input Cipher Key: %h", aes_cipher);
+        $display("Input Cipher Key: %h", aes_key);
         
         #1000;
         
