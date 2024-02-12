@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-
+//Written by B K Teo
 module mult_tb;
 
 reg [7:0] num;
