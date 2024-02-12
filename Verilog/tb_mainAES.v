@@ -16,7 +16,7 @@ module tb_mainAES;
     mainAES UUT (
         .clk(clk),
         .aes_input(aes_input),
-        .aes_cipher(aes_cipher),
+        .aes_key(aes_key),
         .aes_output(aes_output)
     );
     
@@ -28,8 +28,8 @@ module tb_mainAES;
         $display("AES Encryption");
     
         // Assign input and cipher
-        aes_input = 128'h0123456789ABCDEF0123456789ABCDEF;
-        aes_cipher = 128'h0123456789ABCDEF0123456789ABCDEF;
+        aes_input = 128'h0123456789ABCDEF0123456789000000;
+        aes_cipher = 128'h0123456789ABCDEF0123456789000000;
         
         $display("Input Value: %h", aes_input);
         $display("Input Cipher Key: %h", aes_cipher);
