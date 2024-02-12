@@ -1,7 +1,10 @@
 `timescale 1ns / 1ps
 //Written by B K Teo
-
 // modified by K Sikorski
+
+//This module takes in a 128-bit input and performs mix columns.
+//It passes the input values to the multiplier module to be multiplied
+//The multiplied values are then XOR to get the final output values
 
 module mixColumns (clk, input_s, output_s, TempOut); 
 input [127:0] input_s;
@@ -12,9 +15,7 @@ output reg [127:0] output_s;
 output [255:0] TempOut;
 
 
-//always @(input_s) 
-//case (input_s)
-     
+
         // for output (0,0) 
         mult instance_1(.clock(clk), .multiplicand(input_s[127:120]), .multiplier(3'b000), .product(TempOut[255:248]));
         mult instance_2(.clock(clk), .multiplicand(input_s[119:112]), .multiplier(3'b001), .product(TempOut[247:240]));
