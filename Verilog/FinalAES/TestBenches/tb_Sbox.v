@@ -5,14 +5,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module tb_Sbox1;
+module tb_Sbox;
 
 // register to drive input state of the UUT
 reg[7:0] state;
 //Wire for output Sstate of UUT 
 wire[7:0] Sstate; 
 
-Sbox1 UUT(
+Sbox UUT(
 // create a module instatiation of the UUT verilog module 
 //and connect testbench signals to the UUT ports 
  .state(state),

@@ -22,13 +22,14 @@
 
 module Sbox1(
     input [7:0] state,
+    input clk,
     output reg [7:0] Sstate
     );
     // Define S-box values as a constraint_mode
     reg [7:0] sbox [0:255];
     
     // Populate the ROM with the S-box values using a case statement
-     always @*
+     always @(posedge clk) //add clock 
      begin
         case(state)
         8'h00: sbox[state] = 8'h63;
@@ -288,11 +289,12 @@ module Sbox1(
         8'hfe: sbox[state] = 8'hbb;
         8'hff: sbox[state] = 8'h16;
         
+        //default: sbox[state] = 8'h00; // Default value
     endcase
   end
     
     // Assign the output value from the ROM based on the input state
-always @*
+always @(posedge clk)
 begin
     Sstate = sbox[state];
 end
