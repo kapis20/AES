@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 //Subytes taking 8bit input and assigning new 8bit output every positive clock edge
-// The lookup table is declared using the ROM memorry blocka 
+// The lookup table is declared using the ROM memorry blocks
 //written by K. Sikorski
 
 
