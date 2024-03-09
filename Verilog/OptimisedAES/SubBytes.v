@@ -1,17 +1,23 @@
 `timescale 1ns / 1ps
 
-//////////////////////////////////////////////////////////////////////////////////
+//Subytes taking 8bit input and assigning new 8bit output every positive clock edge
+// The lookup table is declared using the ROM memorry blocka 
+//written by K. Sikorski
 
-module SubBytes1(
+
+module SubBytes(
     input [7:0] state,
     input clk,
     output reg [7:0] Sstate
     );
-    // Define S-box values as a constraint_mode
+    // Define S-box values as a lookup table in a memory array sbox with 256 entries, eacj 8 bits wide 
+    // the valeus represent a Rijandel's lookup table 
+    // case statement is utilised to create a ROM structure to initialise sbox array with specific values
+    // at each address corresponding to a apporpiate entries in a lookup table 
     reg [7:0] sbox [0:255];
     
     // Populate the ROM with the S-box values using a case statement
-     always @(posedge clk) //add clock 
+     always @(*) // triggered whenever there is a change in a signal 
      begin
         case(state)
         8'h00: sbox[state] = 8'h63;
@@ -271,7 +277,7 @@ module SubBytes1(
         8'hfe: sbox[state] = 8'hbb;
         8'hff: sbox[state] = 8'h16;
         
-        //default: sbox[state] = 8'h00; // Default value
+        default: sbox[state] = 8'hxx; // Default value in case of fault 
     endcase
   end
     
