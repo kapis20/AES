@@ -16,7 +16,7 @@ module SubBytes(
     // at each address corresponding to a apporpiate entries in a lookup table 
     reg [7:0] sbox [0:255];
     
-    // Populate the ROM with the S-box values using a case statement
+    // not ROM but data is more compact within array saving slices 
      always @(*) // triggered whenever there is a change in a signal 
      begin
         case(state)

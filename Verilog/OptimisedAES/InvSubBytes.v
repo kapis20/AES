@@ -15,7 +15,7 @@ module InvSubBytes(
     // at each address corresponding to a apporpiate entries in a lookup table 
     reg [7:0] inv_sbox [0:255];
     
-    // Populate the ROM with the S-box values using a case statement
+    // it's not rom but data within array is more compact 
     always @(*) // triggered whenever there is a change in a signal 
     begin   
         case(state)
