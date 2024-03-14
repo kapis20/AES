@@ -27,25 +27,47 @@ input clk,
 output reg [7:0] outBits);
 
 wire [7:0] mux1_output;
-SRL16 First_SRL16(
-.Q (bits_shifted_output1),
-.A0 (a),
-.A1 (b),
-.A2 (c),
-.A3 (d), 
-.CLK (input_clk),
-.D (inBits_16)
+S
+// SRL16E: 16-bit shift register LUT with clock enable operating
+//         on posedge of clock (Mapped to a SliceM LUT6)
+//         7 Series
+// Xilinx HDL Language Template, version 2021.2
+
+SRL16E #(
+   .INIT(16'h0000) // Initial Value of Shift Register
+) SRL16E_inst (
+   .Q(Q),       // SRL data output
+   .A0(A0),     // Select[0] input
+   .A1(A1),     // Select[1] input
+   .A2(A2),     // Select[2] input
+   .A3(A3),     // Select[3] input
+   .CE(CE),     // Clock enable input
+   .CLK(CLK),   // Clock input
+   .D(D)        // SRL data input
 );
 
-SRL16 SecondSRL16(
-.Q (bits_shifted_output2),
-.A0 (a),
-.A1 (b),
-.A2 (c),
-.A3 (d), 
-.CLK (input_clk),
-.D (inBits_16)
+// End of SRL16E_inst instantiation
+
+
+// SRL16E: 16-bit shift register LUT with clock enable operating
+//         on posedge of clock (Mapped to a SliceM LUT6)
+//         7 Series
+// Xilinx HDL Language Template, version 2021.2
+
+SRL16E #(
+   .INIT(16'h0000) // Initial Value of Shift Register
+) SRL16E_inst (
+   .Q(Q),       // SRL data output
+   .A0(A0),     // Select[0] input
+   .A1(A1),     // Select[1] input
+   .A2(A2),     // Select[2] input
+   .A3(A3),     // Select[3] input
+   .CE(CE),     // Clock enable input
+   .CLK(CLK),   // Clock input
+   .D(D)        // SRL data input
 );
+
+// End of SRL16E_inst instantiation
 
 mux2_1 mux1(bits_shifted_output1,bits_shifted_output2,A4,mux1_output);
 mux2_1 mux2(mux1_output,inBits,A5, outBits); 
