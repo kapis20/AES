@@ -1,47 +1,49 @@
 module shiftrows(inbyte, clock, outbyte, ready);
 
+
 // declare our FSM states
 parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4;
+
 
 //declare inputs and output
 input clock;
 input [7:0] inbyte;
 output [7:0] outbyte;
-output ready = 0;
+output reg ready = 0;
 
 //declare the control signals that will serve as input to multiplexers and multiplexers output
-reg [3:0] control;
-wire mux_output1, mux_output2, mux_output3;
+reg [4:0] control = 5'b00011;
 
 //declare the 12 registers (each is 1 byte long)
 reg [7:0] d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11;
 
+wire [7:0] mux_output1, mux_output2, mux_output3;
+
+
 //counter that will be used to cycle through FSM
-integer counter = 0;
+reg [4:0] counter = 1'b0;
 
 //FSM States
 reg [2:0] currentState =IDLE; 
-reg [2:0] nextState;
-
-//Control signals for Mux
-reg [4:0] control = 5'b00000;
+reg [2:0] nextState = IDLE;
 
 
-always @ (posedge clk)begin
-counter <= counter +1;
-currentState <= nextState; 
-d0 <= mux_output1;
-d1 <= d0;
-d2 <= d1;
-d3 <= d2;
-d4 <= mux_output2;
-d5 <= d4;
-d6 <= d5;
-d7 <= d6;
-d8 <= mux_output3;
-d9 <= d8;
-d10 <= d9;
-d11 <= d10;
+always @ (posedge clock)begin
+    counter <= counter + 1'b1;
+    currentState <= nextState; 
+    d0 <= mux_output1;
+    d1 <= d0;
+    d2 <= d1;
+    d3 <= d2;
+    d4 <= mux_output2;
+    d5 <= d4;
+    d6 <= d5;
+    d7 <= d6;
+    d8 <= mux_output3;
+    d9 <= d8;
+    d10 <= d9;
+    d11 <= d10;
+end
 
 
 always@(*) begin
@@ -56,9 +58,9 @@ case (currentState)
     ONE: begin
     control <= 5'b00011;
     ready <=1;
-    if ((counter == 12) or (counter == 16) or (counter == 20) or (counter == 22)) begin
+    if ((counter == 12) || (counter == 16) || (counter == 20) || (counter == 22)) begin
     nextState <= TWO;
-    end else if (counter == 27) begin
+    end else if (counter == 26) begin
         nextState <= ONE;
         counter <=12;
     end else begin
@@ -69,7 +71,7 @@ case (currentState)
     TWO: begin
     control <= 5'b00110;
     ready <=1;
-    if ((counter == 21) or (counter == 23)) begin
+    if ((counter == 21) || (counter == 23)) begin
     nextState <= ONE;
     end else begin
     nextState <= THREE;
@@ -94,10 +96,10 @@ case (currentState)
 endcase
 end
 
-mux inst1 (.s1(control[4]), .in1(inbyte), in2(d11), .out(mux_output1));
-mux inst2 (.s1(control[3]), .in(d3), in2(d11), .out(mux_output1));
-mux inst3 (.s1(control[2]), .in(d7), in2(d11), .out(mux_output1));
+mux inst1 (.s1(control[4]), .in1(d11), .in2(inbyte), .out(mux_output1));
+mux inst2 (.s1(control[3]), .in1(d11), .in2(d3), .out(mux_output2));
+mux inst3 (.s1(control[2]), .in1(d11), .in2(d7), .out(mux_output3));
 
-mux2 instance1 (.s1(control [1]), .s2(control [0]), .in1(inbyte), .in2(d3), .in3(d7), .in4(d11) );
+mux2 instance1 (.s1(control[1]), .s2(control[0]), .in1(inbyte), .in2(d3), .in3(d7), .in4(d11), .out(outbyte));
 
-endmodule 
+endmodule
