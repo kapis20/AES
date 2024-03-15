@@ -40,13 +40,13 @@ reg [2:0] currentState =IDLE;
 reg [2:0] nextState = IDLE;
 
 always @ (posedge clk) begin
-    if (counter > 27)begin
-        counter <= 12;
-   end else begin
-        counter <= counter + 1'b1;
-    end
-    
-currentState <= nextState; 
+//    if (counter > 27)begin
+//        counter <= 12;
+//   end else begin
+//        counter <= counter + 1'b1;
+//    end
+    counter <= counter + 1'b1;
+    currentState <= nextState; 
 end
 
 always@(*) begin
