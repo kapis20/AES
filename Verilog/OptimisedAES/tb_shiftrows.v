@@ -30,7 +30,7 @@ module tb_shiftRows1();
   wire ready;
 
   // Instantiate the shiftrows module
-  shiftRows1 UUT (clk, inBits, outBits, ready);
+  shiftRows1 UUT ( .inBits(inBits),.clk(clk), .outBits(outBits), .ready(ready));
 
   // Clock generation
   always begin

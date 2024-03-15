@@ -30,4 +30,4 @@ output out;
 
 // assign one of the inputs to the output based upon select line input
 assign out = select ? in2 : in1;
-endmodule :mux2_1
+endmodule 

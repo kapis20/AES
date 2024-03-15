@@ -24,12 +24,12 @@ module shiftRows1(
 input [7:0] inBits,
 input clk,
 //input [1:0] control, 
-output reg [7:0] outBits,
+output [7:0] outBits,
 output reg ready);
 
 parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4, FIVE =5, SIX =6, SEVEN =7;
 
-reg [4:0] counter;
+reg [6:0] counter =0;
 wire [7:0] SRL_output;
 wire [7:0] SRL_output2;
 wire [7:0] mux1_output;
@@ -40,9 +40,13 @@ reg [2:0] currentState =IDLE;
 reg [2:0] nextState = IDLE;
 
 always @ (posedge clk) begin
-    counter <= counter +1;
-end
-/*currentState <= nextState; 
+    if (counter > 27)begin
+        counter <= 12;
+   end else begin
+        counter <= counter + 1'b1;
+    end
+    
+currentState <= nextState; 
 end
 
 always@(*) begin
@@ -451,21 +455,22 @@ SRL16E #(
 
 
 
-mux2 mux0(SRL_output2[0],SRL_output[0],control[2] ,mux1_output[0]);
-mux2 mux1(SRL_output2[1],SRL_output[1],control[2] ,mux1_output[1]);
-mux2 mux2(SRL_output2[2],SRL_output[2],control[2] ,mux1_output[2]);
-mux2 mux3(SRL_output2[3],SRL_output[3],control[2] ,mux1_output[3]);
-mux2 mux4(SRL_output2[4],SRL_output[4],control[2] ,mux1_output[4]);
-mux2 mux5(SRL_output2[5],SRL_output[5],control[2] ,mux1_output[5]);
-mux2 mux6(SRL_output2[6],SRL_output[6],control[2] ,mux1_output[6]);
-mux2 mux7(SRL_output2[7],SRL_output[7],control[2] ,mux1_output[7]);
+mux2_1 mux0(.in1(SRL_output2[0]),.in2(SRL_output[0]),.select(control[2]) ,.out(mux1_output[0]));
+mux2_1 mux1(.in1(SRL_output2[1]),.in2(SRL_output[1]),.select(control[2]) ,.out(mux1_output[1]));
+mux2_1 mux2(.in1(SRL_output2[2]),.in2(SRL_output[2]),.select(control[2]) ,.out(mux1_output[2]));
+mux2_1 mux3(.in1(SRL_output2[3]),.in2(SRL_output[3]),.select(control[2]) ,.out(mux1_output[3]));
+mux2_1 mux4(.in1(SRL_output2[4]),.in2(SRL_output[4]),.select(control[2]) ,.out(mux1_output[4]));
+mux2_1 mux5(.in1(SRL_output2[5]),.in2(SRL_output[5]),.select(control[2]) ,.out(mux1_output[5]));
+mux2_1 mux6(.in1(SRL_output2[6]),.in2(SRL_output[6]),.select(control[2]) ,.out(mux1_output[6]));
+mux2_1 mux7(.in1(SRL_output2[7]),.in2(SRL_output[7]),.select(control[2]) ,.out(mux1_output[7]));
 
-mux2 mux_2_0(mux1_output[0],inBits[0],control[3], outBits[0]); 
-mux2 mux_2_1(mux1_output[1],inBits[1],control[3], outBits[1]); 
-mux2 mux_2_2(mux1_output[2],inBits[2],control[3], outBits[2]); 
-mux2 mux_2_3(mux1_output[3],inBits[3],control[3], outBits[3]); 
-mux2 mux_2_4(mux1_output[4],inBits[4],control[3], outBits[4]); 
-mux2 mux_2_5(mux1_output[5],inBits[5],control[3], outBits[5]); 
-mux2 mux_2_6(mux1_output[6],inBits[6],control[3], outBits[6]); 
-mux2 mux_2_7(mux1_output[7],inBits[7],control[3], outBits[7]); */
-endmodule
+mux2_1 mux_2_0(.in1(mux1_output[0]),.in2(inBits[0]),.select(control[3]), .out(outBits[0])); 
+mux2_1 mux_2_1(.in1(mux1_output[1]),.in2(inBits[1]),.select(control[3]), .out(outBits[1])); 
+mux2_1 mux_2_2(.in1(mux1_output[2]),.in2(inBits[2]),.select(control[3]), .out(outBits[2])); 
+mux2_1 mux_2_3(.in1(mux1_output[3]),.in2(inBits[3]),.select(control[3]), .out(outBits[3])); 
+mux2_1 mux_2_4(.in1(mux1_output[4]),.in2(inBits[4]),.select(control[3]), .out(outBits[4])); 
+mux2_1 mux_2_5(.in1(mux1_output[5]),.in2(inBits[5]),.select(control[3]), .out(outBits[5])); 
+mux2_1 mux_2_6(.in1(mux1_output[6]),.in2(inBits[6]),.select(control[3]), .out(outBits[6])); 
+mux2_1 mux_2_7(.in1(mux1_output[7]),.in2(inBits[7]),.select(control[3]), .out(outBits[7])); 
+
+endmodule 
