@@ -58,6 +58,9 @@ case (currentState)
     ready <=1;
     if ((counter == 12) or (counter == 16) or (counter == 20) or (counter == 22)) begin
     nextState <= TWO;
+    end else if (counter == 27) begin
+        nextState <= ONE;
+        counter <=12;
     end else begin
     nextState <= ONE;
     end
@@ -98,4 +101,3 @@ mux inst3 (.s1(control[2]), .in(d7), in2(d11), .out(mux_output1));
 mux2 instance1 (.s1(control [1]), .s2(control [0]), .in1(inbyte), .in2(d3), .in3(d7), .in4(d11) );
 
 endmodule 
-
