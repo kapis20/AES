@@ -26,7 +26,9 @@ input s1, s2;
 input [7:0] in1, in2, in3, in4;
 output [7:0] out;
 
-assign out = s1 ? (s2 ? in4 : in3) : (s2 ? in2 : in1);
+
+assign  out = s1 ? (s2 ? in4 : in3) : (s2 ? in2 : in1);
+
 
 
 
