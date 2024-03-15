@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module tb_shiftrows();
+module tb_shiftRows1();
   // Input signals
   reg clk=0;
   reg [7:0] inBits;
@@ -30,11 +30,11 @@ module tb_shiftrows();
   wire ready;
 
   // Instantiate the shiftrows module
-  shiftrows UUT (clk, inBits, outBits, ready);
+  shiftRows1 UUT (clk, inBits, outBits, ready);
 
   // Clock generation
   always begin
-    #5 clk = ~clk;
+    #10 clk = ~clk;
   end
 
   initial begin
