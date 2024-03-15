@@ -27,5 +27,6 @@ input [7:0] in1, in2;
 output [7:0] out;
 
 
-assign out = s1 ? in2 : in1;
+assign out = s1 ? in1 : in2;
+
 endmodule
