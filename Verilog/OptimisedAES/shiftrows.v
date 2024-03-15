@@ -8,7 +8,7 @@ parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4;
 //declare inputs and output
 input clock;
 input [7:0] inbyte;
-output [7:0] outbyte;
+output reg [7:0] outbyte;
 output reg ready = 0;
 
 //declare the control signals that will serve as input to multiplexers and multiplexers output
@@ -27,10 +27,12 @@ reg [4:0] counter = 1'b0;
 reg [2:0] currentState =IDLE; 
 reg [2:0] nextState = IDLE;
 
+wire [7:0] temp_out;
 
 always @ (posedge clock)begin
     counter <= counter + 1'b1;
     currentState <= nextState; 
+    outbyte <= temp_out;
     d0 <= mux_output1;
     d1 <= d0;
     d2 <= d1;
@@ -60,7 +62,7 @@ case (currentState)
     ready <=1;
     if ((counter == 12) || (counter == 16) || (counter == 20) || (counter == 22)) begin
     nextState <= TWO;
-    end else if (counter == 26) begin
+    end else if (counter == 28) begin
         nextState <= ONE;
         counter <=12;
     end else begin
@@ -83,6 +85,8 @@ case (currentState)
     ready <=1;
     if (counter == 18) begin
     nextState <= THREE;
+    end else if (counter == 19) begin
+    nextState <= ONE;
     end else begin
     nextState <= FOUR;
     end
@@ -100,6 +104,6 @@ mux inst1 (.s1(control[4]), .in1(d11), .in2(inbyte), .out(mux_output1));
 mux inst2 (.s1(control[3]), .in1(d11), .in2(d3), .out(mux_output2));
 mux inst3 (.s1(control[2]), .in1(d11), .in2(d7), .out(mux_output3));
 
-mux2 instance1 (.s1(control[1]), .s2(control[0]), .in1(inbyte), .in2(d3), .in3(d7), .in4(d11), .out(outbyte));
+mux2 instance1 (.s1(control[1]), .s2(control[0]), .in1(inbyte), .in2(d3), .in3(d7), .in4(d11), .out(temp_out));
 
 endmodule
