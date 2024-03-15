@@ -1,109 +1,148 @@
-module shiftrows(inbyte, clock, outbyte, ready);
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 14.03.2024 23:18:33
+// Design Name: 
+// Module Name: tb_shiftrows
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
 
 
-// declare our FSM states
-parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4;
+module tb_shiftrows();
+  // Input signals
+  reg clk=0;
+  reg [7:0] inBits;
 
+  // Output signals
+  wire [7:0] outBits;
+  wire ready;
 
-//declare inputs and output
-input clock;
-input [7:0] inbyte;
-output reg [7:0] outbyte;
-output reg ready = 0;
+  // Instantiate the shiftrows module
+  shiftrows UUT (.clock (clk), .inbyte(inBits), .outbyte(outBits), .ready(ready));
 
-//declare the control signals that will serve as input to multiplexers and multiplexers output
-reg [4:0] control = 5'b00011;
+  // Clock generation
+  always begin
+    #5 clk = ~clk;
+  end
 
-//declare the 12 registers (each is 1 byte long)
-reg [7:0] d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11;
-
-wire [7:0] mux_output1, mux_output2, mux_output3;
-
-
-//counter that will be used to cycle through FSM
-reg [4:0] counter = 1'b0;
-
-//FSM States
-reg [2:0] currentState =IDLE; 
-reg [2:0] nextState = IDLE;
-
-wire [7:0] temp_out;
-
-always @ (posedge clock)begin
-    counter <= counter + 1'b1;
-    currentState <= nextState; 
-    outbyte <= temp_out;
-    d0 <= mux_output1;
-    d1 <= d0;
-    d2 <= d1;
-    d3 <= d2;
-    d4 <= mux_output2;
-    d5 <= d4;
-    d6 <= d5;
-    d7 <= d6;
-    d8 <= mux_output3;
-    d9 <= d8;
-    d10 <= d9;
-    d11 <= d10;
-end
-
-
-always@(*) begin
-case (currentState)
-    IDLE: begin
-        if (counter == 11) begin
-            nextState <=ONE;
-        end
-    ready <= 0;
-    end
+  initial begin
+    #5
+    inBits = 8'b11010100; //d4
+    #10
+    inBits = 8'b00100111; //27
+    #10
+    inBits = 8'b00010001; //11
+    #10
+    inBits = 8'b10101110; //ae
     
-    ONE: begin
-    control <= 5'b00011;
-    ready <=1;
-    if ((counter == 12) || (counter == 16) || (counter == 20) || (counter == 22)) begin
-    nextState <= TWO;
-    end else if (counter == 28) begin
-        nextState <= ONE;
-        counter <=12;
-    end else begin
-    nextState <= ONE;
-    end
-    end
     
-    TWO: begin
-    control <= 5'b00110;
-    ready <=1;
-    if ((counter == 21) || (counter == 23)) begin
-    nextState <= ONE;
-    end else begin
-    nextState <= THREE;
-    end
-    end
+    #10
+    inBits = 8'b11100000; //e0
+    #10
+    inBits = 8'b10111111; //bf
+    #10
+    inBits = 8'b10011000; //98
+    #10
+    inBits = 8'b11110001; //f1
     
-    THREE: begin
-    control <= 5'b01001;
-    ready <=1;
-    if (counter == 18) begin
-    nextState <= THREE;
-    end else if (counter == 19) begin
-    nextState <= ONE;
-    end else begin
-    nextState <= FOUR;
-    end
-    end
     
-    FOUR: begin
-    control <= 5'b10000;
-    ready <=1;
-    nextState <= ONE;
+    
+    
+    #10
+    inBits = 8'b10111000; //b8
+    #10
+    inBits = 8'b10110100; //b4
+    #10
+    inBits = 8'b01011101; //5d
+    #10
+    inBits = 8'b11100101; //e5
+    
+    
+    
+    
+    #10
+    inBits = 8'b00011110; //1e
+    #10
+    inBits = 8'b01000001; //41
+    #10
+    inBits = 8'b01010010; //52
+    #10
+    inBits = 8'b00110000; //30
+    
+    
+    //second matrix
+    #10                       
+    inBits = 8'b01001001; //49
+    #10                       
+    inBits = 8'b11011110; //de
+    #10                       
+    inBits = 8'b11010010; //d2
+    #10                       
+    inBits = 8'b10001001; //89
+    
+    
+     #10                       
+     inBits = 8'b01000101; //45
+     #10                       
+     inBits = 8'b11011011; //db
+     #10                       
+     inBits = 8'b10010110; //96
+     #10                       
+     inBits = 8'b11110001; //f1
+    
+    
+     #10                       
+     inBits = 8'b01111111; //7f
+     #10                       
+     inBits = 8'b00111001; //39
+     #10                       
+     inBits = 8'b10000111; //87
+     #10                       
+     inBits = 8'b00011010; //18
+     
+     #10                       
+     inBits = 8'b01110111; //77
+     #10                       
+     inBits = 8'b00000010; //02
+     #10                       
+     inBits = 8'b01010011; //53
+     #10                       
+     inBits = 8'b00111011; //3b
+    
+    
+    #150
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+    $finish;
+  end
+
+  /*
+  // Monitor signals
+  always @(posedge clk) begin
+    if (ready) begin
+      $display("Input:  %b, Output: %b", inBits, outBits);
     end
-endcase
-end
-
-mux inst1 (.s1(control[4]), .in1(d11), .in2(inbyte), .out(mux_output1));
-mux inst2 (.s1(control[3]), .in1(d11), .in2(d3), .out(mux_output2));
-mux inst3 (.s1(control[2]), .in1(d11), .in2(d7), .out(mux_output3));
-
-mux2 instance1 (.s1(control[1]), .s2(control[0]), .in1(inbyte), .in2(d3), .in3(d7), .in4(d11), .out(temp_out));
-
+  end
+  */
 endmodule
