@@ -1,24 +1,25 @@
 `timescale 1ns/1ps
 
 //controller for key expansion based on Hamalainen's Datapath design
-module aes_control (rst, clk, input_key);
+module aes_control (rst, clk, input_key, output_key);
     //declare inputs
     input rst, clk;
     input [7:0] input_key;
-
+    output [7:0] output_key;
     //delcare registers, wires and parameters
     reg select_input, select_sbox, select_last_out, select_bit_out;
     reg [7:0] rcon_en, round_count;
     reg [3:0] count;
     reg [2:0] state;
     wire [3:0] round_count_ke; //separate round counter for the key expansion module
-    wire [7:0] delayed_rkey, last_rkey;
+    wire [7:0] delayed_rkey;
+    wire [7:0] last_rkey;
     parameter LOAD = 0, ONE = 1, TWO = 2, THREE = 3, NORM = 4, SHIFT = 5; //params used for FSM to control input signals
 
     assign round_count_ke = round_count[7:4];
 
     keyExpansion_8bit keyExpansion (input_key, delayed_rkey, last_rkey, clk, round_count_ke, select_input, select_sbox, select_last_out, select_bit_out, rcon_en);
-
+    assign output_key = last_rkey;
     //FSM used to control the current state, which are determined by the number of clock cycles required to complete the state
     always @ (posedge clk) begin
         if (rst == 1) begin
