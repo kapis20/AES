@@ -1,5 +1,26 @@
-module invShiftRows(inbyte, clock, outbyte, ready);
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 16.03.2024 13:00:38
+// Design Name: 
+// Module Name: invShiftRows
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
 
+
+module invShiftRows(inbyte, clock, outbyte, ready);
 
 // declare our FSM states
 parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4, FIVE = 5;
@@ -33,7 +54,7 @@ always @ (posedge clock)begin
     counter <= counter + 1'b1;
     currentState <= nextState; 
     outbyte <= temp_out;
-    d0 <= mux_output1;
+    d0 = mux_output1;
     d1 <= d0;
     d2 <= d1;
     d3 <= d2;
@@ -64,7 +85,7 @@ case (currentState)
     nextState <= FIVE;
     end else if (counter == 16) begin
         nextState <= THREE;
-    end else if (counter == 13) begin
+    end else if (counter == 12) begin
     nextState <= TWO;
     end else if (counter == 28) begin
         counter <= 12;
@@ -86,8 +107,10 @@ case (currentState)
     ready <=1;
     if (counter == 14) begin
     nextState <= FOUR;
-    end else begin
+    end else if (counter == 17) begin
     nextState <= THREE;
+    end else begin
+    nextState <= FIVE;
     end
     end
     
@@ -114,4 +137,3 @@ mux inst3 (.s1(control[2]), .in1(d11), .in2(d7), .out(mux_output3));
 mux2 instance1 (.s1(control[1]), .s2(control[0]), .in1(inbyte), .in2(d3), .in3(d7), .in4(d11), .out(temp_out));
 
 endmodule
-
