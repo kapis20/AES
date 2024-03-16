@@ -54,6 +54,22 @@ always @ (posedge clock)begin
     counter <= counter + 1'b1;
     currentState <= nextState; 
     outbyte <= temp_out;
+    
+    if(counter == 15)begin
+    d0 <= inbyte;
+    d1 <= d0;
+    d2 <= d1;
+    d3 <= d2;
+    d4 <= mux_output2;
+    d5 <= d4;
+    d6 <= d5;
+    d7 <= d6;
+    d8 <= mux_output3;
+    d9 <= d8;
+    d10 <= d9;
+    d11 <= d10;
+    
+    end else begin
     d0 <= mux_output1;
     d1 <= d0;
     d2 <= d1;
@@ -66,7 +82,27 @@ always @ (posedge clock)begin
     d9 <= d8;
     d10 <= d9;
     d11 <= d10;
+    end
 end
+
+
+/*always @ (posedge clock)begin
+    counter <= counter + 1'b1;
+    currentState <= nextState; 
+    outbyte <= temp_out;
+    d0 <= mux_output1;
+    d1 <= d0;
+    d2 <= d1;
+    d3 <= d2;
+    d4 <= mux_output2;
+    d5 <= d4;
+    d6 <= d5;
+    d7 <= d6;
+    d8 <= mux_output3;
+    d9 <= d8;
+    d10 <= d9;
+    d11 <= d10;
+end*/
 
 
 always@(*) begin
