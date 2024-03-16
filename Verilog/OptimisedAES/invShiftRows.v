@@ -54,7 +54,7 @@ always @ (posedge clock)begin
     counter <= counter + 1'b1;
     currentState <= nextState; 
     outbyte <= temp_out;
-    d0 = mux_output1;
+    d0 <= mux_output1;
     d1 <= d0;
     d2 <= d1;
     d3 <= d2;
