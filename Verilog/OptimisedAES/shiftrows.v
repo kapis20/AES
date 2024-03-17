@@ -1,6 +1,6 @@
-module shiftrows(inbyte, clock, outbyte, ready);
+module shiftrows(inbyte, clock, enable, outbyte, ready);
 
-
+//need to add an enable signal. Use this to XOR with the register content so when its 0, they are 0 too.
 // declare our FSM states
 parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4;
 
@@ -8,6 +8,7 @@ parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4;
 //declare inputs and output
 input clock;
 input [7:0] inbyte;
+input enable;
 output reg [7:0] outbyte;
 output reg ready = 0;
 
@@ -30,7 +31,14 @@ reg [2:0] nextState = IDLE;
 wire [7:0] temp_out;
 
 always @ (posedge clock)begin
+
+//only increment counter when enable = 1
+if (enable == 1)begin
     counter <= counter + 1'b1;
+    end else begin
+    counter <= counter;
+    end
+    
     currentState <= nextState; 
     outbyte <= temp_out;
     d0 <= mux_output1;
