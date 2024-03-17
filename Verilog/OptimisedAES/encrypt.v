@@ -27,7 +27,7 @@ parameter IDLE = 0, XOR = 1, SUBBYTE = 2, SHIFTROWS = 3;
 
 input [7:0] in, key;
 input clock, enable;
-output reg [127:0] message;
+output reg [127:0] message=0;
 
 //FSM States
 reg [2:0] currentState =IDLE; 
@@ -46,14 +46,21 @@ reg [5:0] counter = 0;
 reg [7:0] temp = 0;
 
 //variables to store the output from the sub-modules
-wire [7:0] subBytes = 0;
-wire [7:0] SR = 0;
+wire [7:0] Sstate;
+wire [7:0] SR;
 wire ready_sr = 0;
+
+//input to submodules
+reg [7:0] temp_sb;
+
+//enable for submodule
+reg en_SR = 0;
 
 
 //instantiate the sub-modules
-SubBytes inst1 (.state(message[7:0]), .clk(clock), .Sstate(subBytes));
-//shiftrows sr (.clock(clock), .inbyte(message[7:0]), .ready(ready_sr), .outbyte(SR));
+SubBytes inst1 (.state(temp_sb), .clk(clock), .Sstate(Sstate));
+//SubBytes inst1 (.state(message[127:120]), .clk(clock), .Sstate(Sstate));
+shiftrows sr (.clock(clock), .enable(en_SR), .inbyte(temp_sb), .ready(ready_sr), .outbyte(SR));
 
 
 always@(posedge clock)begin
@@ -79,6 +86,7 @@ always@(posedge clock)begin
     message [111:104] <= message [103:96];
     message [119:112] <= message [111:104];
     message [127:120] <= message [119:112];
+    temp_sb <= message [127:120];
 end
 
 always@(*)begin
@@ -102,7 +110,7 @@ case (currentState)
     
     SUBBYTE: begin
     currentState <= SUBBYTE;
-    message[7:0] <= subBytes;
+    message[7:0] <= Sstate;
     
     if (counter == 16)begin
     counter <= 0;
@@ -110,20 +118,23 @@ case (currentState)
     end
     end
     
-    /*SHIFTROWS: begin
-    currentState <= SHIFTROWS;
     
+    
+    SHIFTROWS: begin
+    currentState <= SHIFTROWS;
+    en_SR <=1;
     if (counter > 12) begin
     message [7:0] <= SR;
     end else begin 
     message [7:0] <=0;
     end
     
-    if (ready_sr == 1)begin
+    if (counter == 29)begin
     counter <= 0;
     currentState <= SHIFTROWS;
+    en_SR <=0;
     end
-    end*/
+    end
     
     endcase
     end
