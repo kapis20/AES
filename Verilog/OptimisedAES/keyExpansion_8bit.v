@@ -1,13 +1,13 @@
 `timescale 1ns/1ps
 
 //Key Expansion Unit based upon the datapath design by Hamalainen
-module keyExpansion_8bit(input_key, delayed_rkey, last_rkey, clk, rcount, select_input, select_sbox, select_last_out, select_bit_out, rcon_en);
+module keyExpansion_8bit(input_key, r_key, clk, rcount, select_input, select_sbox, select_last_out, select_bit_out, rcon_en);
     
     //define inputs and outputs
     input [7:0] input_key, rcon_en;
     input [3:0] rcount;
     input clk, select_input, select_sbox, select_last_out, select_bit_out;
-    output [7:0] delayed_rkey, last_rkey;
+    output [7:0] r_key;
 
     //define registers and wires that are part of the datapath
     reg [7:0] r15, r14, r13, r12, r11, r10, r9, r8, r7, r6, r5, r4, r3, r2, r1, r0, r_sbox;
@@ -19,11 +19,8 @@ module keyExpansion_8bit(input_key, delayed_rkey, last_rkey, clk, rcount, select
     //calculate outputs/inputs for other parts from various logic gates
     assign output_rs = output_s ^ output_r;
     assign output_r = rcon_en & rcon;
-    assign input_mux3 = r4 ^ last_rkey;
+    assign input_mux3 = r4 ^ r_key;
     assign input_mux4 = r0 ^ output_rs;
-     
-    //set the delayed output to register r12, as determined in the datapath design
-    assign delayed_rkey = r12;
 
     //shift registers along at the start of each clock cycle, assign some with mux outputs
     always @ (posedge clk) begin
@@ -68,10 +65,10 @@ module keyExpansion_8bit(input_key, delayed_rkey, last_rkey, clk, rcount, select
     endfunction
     
     //mux modules to get outputs in the same clock cycle
-    mux2_1_8 mux_in (input_key, last_rkey, output_mux1, select_input);
+    mux2_1_8 mux_in (input_key, r_key, output_mux1, select_input);
     mux2_1_8 mux_sbox (r_sbox, r13, input_s, select_sbox); 
     mux2_1_8 mux_bit (r4, input_mux3, output_mux3, select_bit_out); 
-    mux2_1_8 mux_last_out (input_mux4, r0, last_rkey, select_last_out);
+    mux2_1_8 mux_last_out (input_mux4, r0, r_key, select_last_out);
     //sbox module
     SubBytes sbox (input_s, clk, output_s);
     
