@@ -1,3 +1,4 @@
+
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
@@ -24,13 +25,14 @@ module tb_shiftrows();
   // Input signals
   reg clk=0;
   reg [7:0] inBits;
+  reg en;
 
   // Output signals
   wire [7:0] outBits;
   wire ready;
 
   // Instantiate the shiftrows module
-  shiftrows UUT (.clock (clk), .inbyte(inBits), .outbyte(outBits), .ready(ready));
+  shiftrows UUT (.clock (clk), .enable (en), .inbyte(inBits), .outbyte(outBits), .ready(ready));
 
   // Clock generation
   always begin
@@ -39,6 +41,7 @@ module tb_shiftrows();
 
   initial begin
     #5
+    en = 1;
     inBits = 8'b11010100; //d4
     #10
     inBits = 8'b00100111; //27
@@ -124,25 +127,8 @@ module tb_shiftrows();
     
     #150
     
-    
-    
-    
-    
-    
-    
-    
-
-
 
     $finish;
   end
 
-  /*
-  // Monitor signals
-  always @(posedge clk) begin
-    if (ready) begin
-      $display("Input:  %b, Output: %b", inBits, outBits);
-    end
-  end
-  */
 endmodule
