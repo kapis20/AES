@@ -5,11 +5,14 @@ module aes_control_tb;
     reg clk;
     reg [7:0] input_key;
     wire [7:0] output_key;
+    wire [127:0] output_key1;
+    wire [3:0] round;
+   
     
 
     //parameter kin = 128'hAA37C40FD7AF4E231219DFB1377E0D7C;
       parameter kin = 128'h2b7e151628aed2a6abf7158809cf4f3c;
-    aes_control test (rst, clk, input_key, output_key);
+      aes_control test (rst, clk, input_key, output_key, output_key1, round);
 
     always #10 begin
         clk = !clk;

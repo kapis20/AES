@@ -1,69 +1,60 @@
 `timescale 1ns/1ps
 
 //controller for key expansion based on Hamalainen's Datapath design
-module aes_control (rst, clk, input_key, output_key);
+module aes_control (rst, clk, input_key, output_key, output_key1, round);
     //declare inputs
     input rst, clk;
     input [7:0] input_key;
     output [7:0] output_key;
+    output reg [127:0] output_key1;
+    output reg [3:0] round; 
     //delcare registers, wires and parameters
     reg select_input, select_sbox, select_last_out, select_bit_out, done=0;
     reg [7:0] rcon_en, round_count;
     reg [3:0] count;
     reg [3:0] counterTemp =0, Temp;
     reg [2:0] state;
-    reg [127:0] output_keys [0:9];
-    reg [127:0] outputKeyTemp;
+    //reg [127:0] output_keys [0:9];
+    reg [127:0] outputKeyTemp; // register to store rounds output 
     wire [3:0] round_count_ke; //separate round counter for the key expansion module
     wire [7:0] delayed_rkey;
-    reg [7:0] startReg, endReg;
     wire [7:0] last_rkey;
     parameter LOAD = 0, ONE = 1, TWO = 2, THREE = 3, NORM = 4, SHIFT = 5; //params used for FSM to control input signals
 
     assign round_count_ke = round_count[7:4];
-//    startReg = 127-(round_count-(16*round_count_ke))*8;
-//    endReg = 120-(round_count-(16*round_count_ke))*8;
+
     keyExpansion_8bit keyExpansion (input_key, delayed_rkey, last_rkey, clk, round_count_ke, select_input, select_sbox, select_last_out, select_bit_out, rcon_en);
     assign output_key = last_rkey;
     
     always @(negedge clk) begin
+    // store each byte in LSB and shift left each cycle by one byte
        outputKeyTemp <= outputKeyTemp <<8; 
        outputKeyTemp[7:0] <= output_key;   
+       // done singal assigned to 1 so when all rounds are done we don't store any more keys 
        if (round_count_ke ==10) begin 
             done <=1;
             end
        if (done == 0) begin   
             if (counterTemp == 0) begin
-              Temp = round_count_ke;
+              round <= round_count_ke;
+              //round = Temp;
               end else if ( counterTemp== 1) begin
-              
-            case (Temp)
-              
-              8'h00: output_keys[Temp] = outputKeyTemp;
-              8'h01: output_keys[Temp] = outputKeyTemp;
-              8'h02: output_keys[Temp] = outputKeyTemp;
-              8'h03: output_keys[Temp] = outputKeyTemp;
-              8'h04: output_keys[Temp] = outputKeyTemp;
-              8'h05: output_keys[Temp] = outputKeyTemp;
-              8'h06: output_keys[Temp] = outputKeyTemp;
-              8'h07: output_keys[Temp] = outputKeyTemp;
-              8'h08: output_keys[Temp] = outputKeyTemp;
-              8'h09: output_keys[Temp] = outputKeyTemp;
-            //8'h00: output_keys[round_count_ke][127-(round_count-(16*round_count_ke))*8:120-(round_count-(16*round_count_ke))*8] = output_key;
-//            8'h00: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h01: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h02: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h03: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h04: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h05: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h06: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h07: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h08: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h09: output_keys[round_count_ke] = outputKeyTemp;
-//            8'h0a: output_keys[round_count_ke] = outputKeyTemp;
-            
+              output_key1 <= outputKeyTemp;
+//            case (Temp)
+//              // array to store all keys 
+//              8'h00: output_keys[Temp] = outputKeyTemp;
+//              8'h01: output_keys[Temp] = outputKeyTemp;
+//              8'h02: output_keys[Temp] = outputKeyTemp;
+//              8'h03: output_keys[Temp] = outputKeyTemp;
+//              8'h04: output_keys[Temp] = outputKeyTemp;
+//              8'h05: output_keys[Temp] = outputKeyTemp;
+//              8'h06: output_keys[Temp] = outputKeyTemp;
+//              8'h07: output_keys[Temp] = outputKeyTemp;
+//              8'h08: output_keys[Temp] = outputKeyTemp;
+//              8'h09: output_keys[Temp] = outputKeyTemp;
+         
         
-        endcase
+//        endcase
         end
         end
     end
@@ -76,12 +67,6 @@ module aes_control (rst, clk, input_key, output_key);
         end
         else begin
         
-//        outputKeyTemp <= outputKeyTemp <<8;
-//        outputKeyTemp[7:0] <= output_key;
-        
-        
-
-
             case (state)
                 LOAD: //load input key into the key expansion unit. Stop when there have been 16 clock cycles (i.e. registers are full)
                 begin
