@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 //controller for key expansion based on Hamalainen's Datapath design
-module aes_control (rst, clk, input_key, output_key, output_key1, round);
+module key_expansion_control (rst, clk, input_key, output_key, output_key1, round);
     //declare inputs
     input rst, clk;
     input [7:0] input_key;
@@ -12,7 +12,7 @@ module aes_control (rst, clk, input_key, output_key, output_key1, round);
     reg select_input, select_sbox, select_last_out, select_bit_out, done=0;
     reg [7:0] rcon_en, round_count;
     reg [3:0] count;
-    reg [3:0] counterTemp =0, Temp;
+    reg [3:0] counterTemp =0;
     reg [2:0] state;
     //reg [127:0] output_keys [0:9];
     reg [127:0] outputKeyTemp; // register to store rounds output 
@@ -37,7 +37,7 @@ module aes_control (rst, clk, input_key, output_key, output_key1, round);
        if (done == 0) begin   
             if (counterTemp == 0) begin
               round <= round_count_ke;
-              //round = Temp;
+              
               end else if ( counterTemp== 1) begin
               output_key1 <= outputKeyTemp;
 //            case (Temp)

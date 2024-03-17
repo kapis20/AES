@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module aes_control_tb;
+module key_expansion_control_tb;
     reg rst;
     reg clk;
     reg [7:0] input_key;
@@ -12,7 +12,7 @@ module aes_control_tb;
 
     //parameter kin = 128'hAA37C40FD7AF4E231219DFB1377E0D7C;
       parameter kin = 128'h2b7e151628aed2a6abf7158809cf4f3c;
-      aes_control test (rst, clk, input_key, output_key, output_key1, round);
+      key_expansion_control test (rst, clk, input_key, output_key, output_key1, round);
 
     always #10 begin
         clk = !clk;
