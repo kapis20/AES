@@ -29,7 +29,4 @@ output [7:0] out;
 
 assign  out = s1 ? (s2 ? in4 : in3) : (s2 ? in2 : in1);
 
-
-
-
 endmodule

@@ -22,7 +22,7 @@
 
 module encrypt(in, clock, enable, key, message);
 
-parameter IDLE = 0, XOR = 1, SUBBYTE = 2, SHIFTROWS = 3;
+parameter IDLE = 0, XOR = 1, SUBBYTE = 2, SHIFTROWS = 3, MIXCOLUMNS = 4;
 
 
 input [7:0] in, key;
@@ -39,7 +39,7 @@ reg [2:0] nextState = IDLE;
 //output ready signal when round == 10
 //output ready = 0;
 
-//counters
+//counter
 reg [5:0] counter = 0;
 
 //temp results
@@ -49,18 +49,22 @@ reg [7:0] temp = 0;
 wire [7:0] Sstate;
 wire [7:0] SR;
 wire ready_sr = 0;
+wire [7:0] MC;
 
 //input to submodules
-reg [7:0] temp_sb;
+reg [7:0] temp;
 
 //enable for submodule
 reg en_SR = 0;
+reg [7:0] en_MC = 0;
+reg ready_MC = 0;
 
 
 //instantiate the sub-modules
-SubBytes inst1 (.state(temp_sb), .clk(clock), .Sstate(Sstate));
+SubBytes sb (.state(temp), .clk(clock), .Sstate(Sstate));
 //SubBytes inst1 (.state(message[127:120]), .clk(clock), .Sstate(Sstate));
-shiftrows sr (.clock(clock), .enable(en_SR), .inbyte(temp_sb), .ready(ready_sr), .outbyte(SR));
+shiftrows sr (.clock(clock), .enable(en_SR), .inbyte(temp), .ready(ready_sr), .outbyte(SR));
+mixColumns mc (.clock(clock), .enable(en_MC), .ready(ready_MC), .in_byte(temp), .out_byte(MC));
 
 
 always@(posedge clock)begin
@@ -86,7 +90,7 @@ always@(posedge clock)begin
     message [111:104] <= message [103:96];
     message [119:112] <= message [111:104];
     message [127:120] <= message [119:112];
-    temp_sb <= message [127:120];
+    temp <= message [127:120];
 end
 
 always@(*)begin
@@ -95,6 +99,7 @@ case (currentState)
     if (enable == 1)begin
     currentState <= XOR;
     end else begin
+    message <= message;
     currentState <= IDLE;
     end
     end
@@ -131,10 +136,34 @@ case (currentState)
     
     if (counter == 29)begin
     counter <= 0;
-    currentState <= SHIFTROWS;
+    currentState <= MIXCOLUMNS;
     en_SR <=0;
     end
     end
+    
+    MIXCOLUMNS: begin
+    currentState <=  MIXCOLUMNS;
+    ready_MC <=1;
+    if (counter > 3)begin
+    message [7:0] <= MC;
+    end else begin
+    message [7:0] <= 0;
+    end
+    
+    if ((counter == 0) || (counter == 4) || (counter == 8) || (counter == 12))begin
+    en_MC = 8'b00000000;
+    end else begin
+    en_MC = 8'b11111111;
+    end
+    
+    if (counter == 20)begin
+    counter <= 0;
+    ready_MC <=0;
+    currentState <= IDLE;
+    end
+    end
+   
+    
     
     endcase
     end

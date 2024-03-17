@@ -5,12 +5,12 @@ input [7:0] in_byte;
 input [7:0] enable;
 input clock;*/
 
-module mixColumns(in_byte, clock, enable, out_byte);
+module mixColumns(in_byte, ready, clock, enable, out_byte);
 
 
 input [7:0] in_byte;
 input [7:0] enable;
-input clock;
+input clock, ready;
 output reg [7:0] out_byte=0;
 
 //intermediate registers
@@ -53,7 +53,12 @@ always @(posedge clock) begin
     out_byte_3 = mult3(in_byte) ^ (out_byte_4 & enable);
     out_byte_4 = mult2(in_byte) ^ temp;
     
-    counter = counter + 1;
+    //only increment counter when enable = 1
+    if (ready == 1)begin
+    counter = counter + 1'b1;
+    end else begin
+    counter = counter;
+    end
    
   
     
