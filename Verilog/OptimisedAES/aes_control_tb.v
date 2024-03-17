@@ -5,6 +5,7 @@ module aes_control_tb;
     reg clk;
     reg [7:0] input_key;
     wire [7:0] output_key;
+    
 
     //parameter kin = 128'hAA37C40FD7AF4E231219DFB1377E0D7C;
       parameter kin = 128'h2b7e151628aed2a6abf7158809cf4f3c;
