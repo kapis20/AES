@@ -1,19 +1,19 @@
 `timescale 1ns/1ps
 
 //controller for key expansion based on Hamalainen's Datapath design
-module key_expansion_control (rst, clk, input_key, input_mixCol, outputByte,outputKey, output_key128);
+module key_expansion_control (rst, clk, input_key, MessageIn,outputKey);
 
     //declare inputs
     input rst, clk;
     input [7:0] input_key;
-    input [127:0] input_mixCol;
-    output reg [7:0] outputByte;
-    output reg [127:0] output_key128;
+    input [7:0] MessageIn;
+    //output reg [7:0] outputByte;
+    //output reg [127:0] output_key128;
     output reg [7:0] outputKey;
     //output reg [3:0] round; 
     
     //delcare registers, wires and parameters
-    reg select_input, select_sbox, select_last_out, select_bit_out, done=0;
+    reg select_input, select_sbox, select_last_out, select_bit_out,enable=0, done=0;
     reg [7:0] rcon_en, round_count, roundMixColcounter =0;
     reg [3:0] fsm_count, roundMixCol=0;
     reg [3:0] counterTemp =0,Temp, round;
@@ -21,13 +21,15 @@ module key_expansion_control (rst, clk, input_key, input_mixCol, outputByte,outp
     reg [127:0] outputKeyTemp; // register to store rounds output 
     reg [127:0] output_keys [0:9];
     reg [127:0] inputMixCol;
+    //reg [127:0] MessageIn;
     wire [3:0] round_count_ke; //separate round counter for the key expansion module
     wire [7:0] round_key;
     wire [7:0] output_key8;
+    wire [127:0] output_mixCol;
     parameter LOAD = 0, ONE = 1, TWO = 2, THREE = 3, NORM = 4, SHIFT = 5; //params used for FSM to control input signals
-    parameter WAIT = 6, ENCRYPT = 7;
+    //parameter WAIT = 6, ENCRYPT = 7;
     keyExpansion_8bit keyExpansion (input_key, round_key, clk, round_count_ke, select_input, select_sbox, select_last_out, select_bit_out, rcon_en);
-    
+    encrypt Encryption (MessageIn, clk, enable,outputKey, output_mixCol);
     assign round_count_ke = round_count[7:4];
     assign output_key8 = round_key;
     
@@ -206,19 +208,22 @@ module key_expansion_control (rst, clk, input_key, input_mixCol, outputByte,outp
     end
     
     always @(posedge clk)begin
+    enable <=1;
     roundMixColcounter <= roundMixColcounter +1;
-    if (roundMixColcounter == 80) begin
-    inputMixCol = input_mixCol;
+    if (roundMixColcounter == 81) begin
+    inputMixCol = output_mixCol;
     roundMixCol = roundMixCol +1;
     roundMixColcounter <=0;
     end 
     
     if (roundMixCol > 0 && roundMixCol <11) begin
-    outputByte <= inputMixCol[127:120];
-    inputMixCol <= inputMixCol <<8;
+    //outputByte <= inputMixCol[127:120];
+    //inputMixCol <= inputMixCol <<8;
     outputKey <= output_keys[roundMixCol-1][127:120];
     output_keys[roundMixCol-1] <= output_keys[roundMixCol-1] <<8;
     
+    end else begin 
+    outputKey = input_key;
     end   
     end
 
