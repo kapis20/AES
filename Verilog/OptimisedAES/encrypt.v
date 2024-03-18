@@ -155,7 +155,11 @@ case (currentState)
     message [7:0] <=0;
     end
     
-    if (counter == 29)begin
+    if ((round == 9) && (counter == 29))begin
+    counter <= 0;
+    currentState <= XOR_RK;
+    en_SR <=0;
+    end else if (counter == 29)begin
     counter <= 0;
     currentState <= MIXCOLUMNS;
     en_SR <=0;
