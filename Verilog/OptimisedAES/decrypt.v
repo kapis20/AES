@@ -20,13 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module encrypt(in, clock, enable, ready, key, message);
+module decrypt(in, clock, enable, key, message);
 
 parameter IDLE = 0, XOR = 1, SUBBYTE = 2, SHIFTROWS = 3, MIXCOLUMNS = 4, XOR_RK = 5;
 
 
 input [7:0] in, key;
-input clock, enable, ready;
+input clock, enable;
 output reg [127:0] message=0;
 
 //FSM States
@@ -59,12 +59,13 @@ reg en_SR = 0;
 reg [7:0] en_MC = 0;
 reg ready_MC = 0;
 
+//round counter to keep track of the rounds
+//reg [3:0] round = 0;
 
 //instantiate the sub-modules
-SubBytes sb (.state(temp), .clk(clock), .Sstate(Sstate));
-//SubBytes inst1 (.state(message[127:120]), .clk(clock), .Sstate(Sstate));
-shiftrows sr (.clock(clock), .enable(en_SR), .inbyte(temp), .ready(ready_sr), .outbyte(SR));
-mixColumns mc (.clock(clock), .enable(en_MC), .ready(ready_MC), .in_byte(temp), .out_byte(MC));
+invSubBytes sb (.state(temp), .Sstate(Sstate));
+invShiftRows sr (.clock(clock), .enable(en_SR), .inbyte(temp), .ready(ready_sr), .outbyte(SR));
+invMixColumns mc (.clock(clock), .enable(en_MC), .ready(ready_MC), .in_byte(temp), .out_byte(MC));
 
 
 always@(posedge clock)begin
@@ -96,12 +97,10 @@ end
 always@(*)begin
 case (currentState)
     IDLE: begin
-    message <= message;
-    if (ready == 1)begin
+    if (enable == 1)begin
     currentState <= XOR;
     end else begin
     message <= message;
-    counter <= 0;
     currentState <= IDLE;
     end
     end
@@ -111,8 +110,8 @@ case (currentState)
     
     if (counter == 17)begin
     counter <= 0;
-    currentState <= SUBBYTE;
-    end
+    currentState <= SHIFTROWS;
+    end 
     end
     
     SUBBYTE: begin
@@ -121,7 +120,7 @@ case (currentState)
     
     if (counter == 16)begin
     counter <= 0;
-    currentState <= SHIFTROWS;
+    currentState <= XOR_RK;
     end
     end
     
@@ -138,7 +137,7 @@ case (currentState)
     
     if (counter == 29)begin
     counter <= 0;
-    currentState <= MIXCOLUMNS;
+    currentState <= SUBBYTE;
     en_SR <=0;
     end
     end
@@ -161,7 +160,7 @@ case (currentState)
     if (counter == 20)begin
     counter <= 0;
     ready_MC <=0;
-    currentState <= XOR_RK;
+    currentState <= IDLE;
     end
     end
     
@@ -170,7 +169,7 @@ case (currentState)
     
     if (counter == 16)begin
     counter <= 0;
-    currentState <= SUBBYTE;
+    currentState <= MIXCOLUMNS;
     end
     end
    

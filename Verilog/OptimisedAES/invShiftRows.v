@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module invShiftRows(inbyte, clock, outbyte, ready);
+module invShiftRows(inbyte, clock, enable, outbyte, ready);
 
 // declare our FSM states
 parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4, FIVE = 5;
@@ -29,6 +29,7 @@ parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4, FIVE = 5;
 //declare inputs and output
 input clock;
 input [7:0] inbyte;
+input enable;
 output reg [7:0] outbyte;
 output reg ready = 0;
 
@@ -51,7 +52,14 @@ reg [2:0] nextState = IDLE;
 wire [7:0] temp_out;
 
 always @ (posedge clock)begin
+    //only increment counter when enable = 1
+    if (enable == 1)begin
     counter <= counter + 1'b1;
+    end else begin
+    counter <= counter;
+    end
+    
+    
     currentState <= nextState; 
     outbyte <= temp_out;
     
