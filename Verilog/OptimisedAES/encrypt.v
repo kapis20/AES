@@ -20,13 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module encrypt(in, clock, enable, key, message);
+module encrypt(in, clock, enable, ready, key, message);
 
-parameter IDLE = 0, XOR = 1, SUBBYTE = 2, SHIFTROWS = 3, MIXCOLUMNS = 4;
+parameter IDLE = 0, XOR = 1, SUBBYTE = 2, SHIFTROWS = 3, MIXCOLUMNS = 4, XOR_RK = 5;
 
 
 input [7:0] in, key;
-input clock, enable;
+input clock, enable, ready;
 output reg [127:0] message=0;
 
 //FSM States
@@ -96,10 +96,12 @@ end
 always@(*)begin
 case (currentState)
     IDLE: begin
-    if (enable == 1)begin
+    message <= message;
+    if (ready == 1)begin
     currentState <= XOR;
     end else begin
     message <= message;
+    counter <= 0;
     currentState <= IDLE;
     end
     end
@@ -159,7 +161,16 @@ case (currentState)
     if (counter == 20)begin
     counter <= 0;
     ready_MC <=0;
-    currentState <= IDLE;
+    currentState <= XOR_RK;
+    end
+    end
+    
+    XOR_RK: begin
+    message [7:0] <= temp ^ key;
+    
+    if (counter == 16)begin
+    counter <= 0;
+    currentState <= SUBBYTE;
     end
     end
    
