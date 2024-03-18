@@ -1,26 +1,31 @@
 `timescale 1ns/1ps
 
 //controller for key expansion based on Hamalainen's Datapath design
-module key_expansion_control (rst, clk, input_key, output_key128, round);
+module key_expansion_control (rst, clk, input_key, input_mixCol, outputByte,outputKey, output_key128);
 
     //declare inputs
     input rst, clk;
     input [7:0] input_key;
+    input [127:0] input_mixCol;
+    output reg [7:0] outputByte;
     output reg [127:0] output_key128;
-    output reg [3:0] round; 
+    output reg [7:0] outputKey;
+    //output reg [3:0] round; 
     
     //delcare registers, wires and parameters
     reg select_input, select_sbox, select_last_out, select_bit_out, done=0;
-    reg [7:0] rcon_en, round_count;
-    reg [3:0] fsm_count;
-    reg [3:0] counterTemp =0;
-    reg [2:0] state;
+    reg [7:0] rcon_en, round_count, roundMixColcounter =0;
+    reg [3:0] fsm_count, roundMixCol=0;
+    reg [3:0] counterTemp =0,Temp, round;
+    reg [2:0] state,state2;
     reg [127:0] outputKeyTemp; // register to store rounds output 
+    reg [127:0] output_keys [0:9];
+    reg [127:0] inputMixCol;
     wire [3:0] round_count_ke; //separate round counter for the key expansion module
     wire [7:0] round_key;
     wire [7:0] output_key8;
     parameter LOAD = 0, ONE = 1, TWO = 2, THREE = 3, NORM = 4, SHIFT = 5; //params used for FSM to control input signals
-
+    parameter WAIT = 6, ENCRYPT = 7;
     keyExpansion_8bit keyExpansion (input_key, round_key, clk, round_count_ke, select_input, select_sbox, select_last_out, select_bit_out, rcon_en);
     
     assign round_count_ke = round_count[7:4];
@@ -105,11 +110,26 @@ module key_expansion_control (rst, clk, input_key, output_key128, round);
         
         if (done == 0) begin   
             if (counterTemp == 0) begin
-              round <= round_count_ke + 1;
-              
+//round <= round_count_ke + 1;
+              round <= round_count_ke;
+              //Temp <= round;
               end 
             else if ( counterTemp == 1) begin
-              output_key128 <= outputKeyTemp;
+              //output_key128 <= outputKeyTemp;
+               case (round)
+              // array to store all keys 
+              8'h00: output_keys[round] = outputKeyTemp;
+              8'h01: output_keys[round] = outputKeyTemp;
+              8'h02: output_keys[round] = outputKeyTemp;
+              8'h03: output_keys[round] = outputKeyTemp;
+              8'h04: output_keys[round] = outputKeyTemp;
+              8'h05: output_keys[round] = outputKeyTemp;
+              8'h06: output_keys[round] = outputKeyTemp;
+              8'h07: output_keys[round] = outputKeyTemp;
+              8'h08: output_keys[round] = outputKeyTemp;
+              8'h09: output_keys[round] = outputKeyTemp;
+              
+              endcase 
                 end
         end
         
@@ -183,6 +203,23 @@ module key_expansion_control (rst, clk, input_key, output_key128, round);
                 rcon_en <= 0;
             end
         endcase
+    end
+    
+    always @(posedge clk)begin
+    roundMixColcounter <= roundMixColcounter +1;
+    if (roundMixColcounter == 80) begin
+    inputMixCol = input_mixCol;
+    roundMixCol = roundMixCol +1;
+    roundMixColcounter <=0;
+    end 
+    
+    if (roundMixCol > 0 && roundMixCol <11) begin
+    outputByte <= inputMixCol[127:120];
+    inputMixCol <= inputMixCol <<8;
+    outputKey <= output_keys[roundMixCol-1][127:120];
+    output_keys[roundMixCol-1] <= output_keys[roundMixCol-1] <<8;
+    
+    end   
     end
 
 endmodule
