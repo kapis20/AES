@@ -72,7 +72,8 @@ case (currentState)
     nextState <= TWO;
     end else if (counter == 28) begin
         nextState <= ONE;
-        counter <=12;
+    end else if(counter == 29) begin
+    counter <=0;
     end else begin
     nextState <= ONE;
     end

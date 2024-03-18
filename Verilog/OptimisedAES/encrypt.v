@@ -34,7 +34,7 @@ reg [2:0] currentState =IDLE;
 reg [2:0] nextState = IDLE;
 
 //keep track of the number of rounds
-//reg [3:0] round = 0;
+reg [3:0] round = 0;
 
 //output ready signal when round == 10
 //output ready = 0;
@@ -126,7 +126,27 @@ case (currentState)
     
     
     
-    SHIFTROWS: begin
+    /*SHIFTROWS: begin
+    currentState <= SHIFTROWS;
+    en_SR <=1;
+    if (counter > 12) begin
+    message [7:0] <= SR;
+    end else begin 
+    message [7:0] <=0;
+    end
+    
+    if (counter == 29)begin
+    counter <= 0;
+    en_SR <=0;
+    currentState <= MIXCOLUMNS;
+    end else if ((counter == 29) && (round == 10))begin
+    counter <= 0;
+    en_SR <=0;
+    currentState <= XOR_RK;
+    end
+    end*/
+    
+     SHIFTROWS: begin
     currentState <= SHIFTROWS;
     en_SR <=1;
     if (counter > 12) begin
@@ -170,6 +190,7 @@ case (currentState)
     if (counter == 16)begin
     counter <= 0;
     currentState <= SUBBYTE;
+    round <= round +1;
     end
     end
    
