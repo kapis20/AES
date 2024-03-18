@@ -21,7 +21,7 @@ module key_expansion_control_tb;
         clk = 1'b1;
         
       
-        #5
+        #10
         rst = 1'b0;
         input_key = kin[127:120];
         //input_MixCol = kin[127:0];
