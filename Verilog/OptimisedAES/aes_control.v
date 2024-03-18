@@ -210,11 +210,15 @@ module key_expansion_control (rst, clk, input_key, MessageIn,outputKey);
     always @(posedge clk)begin
     enable <=1;
     roundMixColcounter <= roundMixColcounter +1;
-    if (roundMixColcounter == 81) begin
+    if (roundMixColcounter == 82 && roundMixCol <9) begin
     inputMixCol = output_mixCol;
     roundMixCol = roundMixCol +1;
-    roundMixColcounter <=0;
-    end 
+    roundMixColcounter <=2;
+    end else if(roundMixColcounter == 62 && roundMixCol ==9) begin
+    roundMixColcounter<=2;
+    inputMixCol = output_mixCol;
+    roundMixCol = roundMixCol +1;
+    end
     
     if (roundMixCol > 0 && roundMixCol <11) begin
     //outputByte <= inputMixCol[127:120];
