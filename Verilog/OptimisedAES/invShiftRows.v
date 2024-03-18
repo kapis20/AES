@@ -130,10 +130,11 @@ case (currentState)
     end else if (counter == 16) begin
         nextState <= THREE;
     end else if (counter == 12) begin
-    nextState <= TWO;
+        nextState <= TWO;
     end else if (counter == 28) begin
-        counter <= 12;
         nextState <= ONE;
+    end else if (counter == 29) begin
+        counter <= 0;
     end else begin
         nextState <= ONE;
     end

@@ -160,7 +160,7 @@ case (currentState)
     if (counter == 20)begin
     counter <= 0;
     ready_MC <=0;
-    currentState <= IDLE;
+    currentState <= SHIFTROWS;
     end
     end
     
