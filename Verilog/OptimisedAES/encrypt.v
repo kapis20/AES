@@ -20,13 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module encrypt(in, clock, enable, ready, key, message);
+module encrypt(in, clock, enable, key, message);
 
 parameter IDLE = 0, XOR = 1, SUBBYTE = 2, SHIFTROWS = 3, MIXCOLUMNS = 4, XOR_RK = 5;
 
 
 input [7:0] in, key;
-input clock, enable, ready;
+input clock, enable;
 output reg [127:0] message=0;
 
 //FSM States
@@ -74,7 +74,6 @@ always@(posedge clock)begin
     end
     
 //assign register values for the message. Update it with the temp value
-    //message [7:0] <= temp;
     message [15:8] <= message [7:0];
     message [23:16] <= message [15:8];
     message [31:24] <= message [23:16];
@@ -97,7 +96,7 @@ always@(*)begin
 case (currentState)
     IDLE: begin
     message <= message;
-    if (ready == 1)begin
+    if (enable == 1)begin
     currentState <= XOR;
     end else begin
     message <= message;
