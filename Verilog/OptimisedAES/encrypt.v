@@ -1,58 +1,38 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 17.03.2024 02:13:45
-// Design Name: 
-// Module Name: encryption
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// Engineer: Boon Kean Teo
+// Module Name: encrypt
+// Project Name: AES (EEE6225)
 //////////////////////////////////////////////////////////////////////////////////
 
 
 module encrypt(in, clock, enable, key, message);
 
+//defining the states for FSM
 parameter IDLE = 0, XOR = 1, SUBBYTE = 2, SHIFTROWS = 3, MIXCOLUMNS = 4, XOR_RK = 5;
 
-
+//defining input and output
 input [7:0] in, key;
 input clock, enable;
 output reg [127:0] message=0;
 
-//FSM States
+//Current state of FSM
 reg [2:0] currentState =IDLE; 
-reg [2:0] nextState = IDLE;
 
-//keep track of the number of rounds
+//counter to keep track of the number of rounds
 reg [3:0] round = 0;
-
-//output ready signal when round == 10
-//output ready = 0;
 
 //counter
 reg [5:0] counter = 0;
 
-//temp results
+//temporary register to store the input to submodules
 reg [7:0] temp = 0;
 
-//variables to store the output from the sub-modules
+//temporary registers to store the output from the sub-modules
 wire [7:0] Sstate;
 wire [7:0] SR;
 wire ready_sr = 0;
 wire [7:0] MC;
-
-//input to submodules
-reg [7:0] temp;
 
 //enable for submodule
 reg en_SR = 0;
@@ -62,7 +42,6 @@ reg ready_MC = 0;
 
 //instantiate the sub-modules
 SubBytes sb (.state(temp), .clk(clock), .Sstate(Sstate));
-//SubBytes inst1 (.state(message[127:120]), .clk(clock), .Sstate(Sstate));
 shiftrows sr (.clock(clock), .enable(en_SR), .inbyte(temp), .ready(ready_sr), .outbyte(SR));
 mixColumns mc (.clock(clock), .enable(en_MC), .ready(ready_MC), .in_byte(temp), .out_byte(MC));
 
@@ -73,7 +52,7 @@ always@(posedge clock)begin
         counter <= counter +1;
     end
     
-//assign register values for the message. Update it with the temp value
+//Left shift message by 1 byte every clock cycle. Also assign the last byte with temp, which holds output of modules instantiated
     message [15:8] <= message [7:0];
     message [23:16] <= message [15:8];
     message [31:24] <= message [23:16];
@@ -94,6 +73,8 @@ end
 
 always@(*)begin
 case (currentState)
+
+    //Do nothing until enable turns high. Transitions to XOR state.
     IDLE: begin
     message <= message;
     if (enable == 1)begin
@@ -105,6 +86,7 @@ case (currentState)
     end
     end
     
+    //This is the first XOR that computes XOR between original key and input
     XOR: begin
     message [7:0] <= in ^ key;
     
@@ -114,6 +96,9 @@ case (currentState)
     end
     end
     
+
+    //In this state, the temp is assigned to the output of SubByte module. Takes 16 clock cycles to complete because there are 16 bytes. 
+    //Transitions to SHIFTROWS next
     SUBBYTE: begin
     currentState <= SUBBYTE;
     message[7:0] <= Sstate;
@@ -124,29 +109,10 @@ case (currentState)
     end
     end
     
-    
-    
-    /*SHIFTROWS: begin
-    currentState <= SHIFTROWS;
-    en_SR <=1;
-    if (counter > 12) begin
-    message [7:0] <= SR;
-    end else begin 
-    message [7:0] <=0;
-    end
-    
-    if (counter == 29)begin
-    counter <= 0;
-    en_SR <=0;
-    currentState <= MIXCOLUMNS;
-    end else if ((counter == 29) && (round == 10))begin
-    counter <= 0;
-    en_SR <=0;
-    currentState <= XOR_RK;
-    end
-    end*/
-    
-     SHIFTROWS: begin
+    //In this state, the temp is assigned to the output of ShiftRows module. 
+    //Takes 28 clock cycles to complete because there are 16 bytes and a latency of 12 clock cycles to load the registers.
+    //Transitions to MIXCOLUMNS next
+    SHIFTROWS: begin
     currentState <= SHIFTROWS;
     en_SR <=1;
     if (counter > 12) begin
@@ -166,6 +132,10 @@ case (currentState)
     end
     end
     
+
+    //In this state, the temp is assigned to the output of MixColumns module. 
+    //Takes 20 clock cycles to complete because there are 16 bytes and a latency of 4 clock cycles.
+    //Transitions to XOR_RK next
     MIXCOLUMNS: begin
     currentState <=  MIXCOLUMNS;
     ready_MC <=1;
@@ -188,6 +158,8 @@ case (currentState)
     end
     end
     
+    //This state is similar to XOR, but instead of XOR between input message and key, it XOR the temp (first byte of message) and input key (round key)
+    //Transitions to the next round which starts again from SUBBYTE
     XOR_RK: begin
     message [7:0] <= temp ^ key;
     
@@ -197,9 +169,7 @@ case (currentState)
     round <= round +1;
     end
     end
-   
-    
-    
+  
     endcase
     end
     
