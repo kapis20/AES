@@ -4,9 +4,10 @@
 // The lookup table is declared using the ROM memorry blocks
 //written by K. Sikorski
 
-module invSubBytes(
+module InvSubBytes(
     input [7:0] state,
-    output [7:0] Sstate
+    input clk,
+    output reg [7:0] Sstate
     );
      // Define Invsbox values as a lookup table in a memory array sbox with 256 entries, eacj 8 bits wide 
     // the valeus represent a Rijandel's lookup table 
@@ -296,6 +297,9 @@ module invSubBytes(
   end
   
      // Assign the output value from the ROM based on the input state
-    assign Sstate = inv_sbox[state];
+    always @(posedge clk)
+begin
+    Sstate = inv_sbox[state];
+end
 
 endmodule
