@@ -1,7 +1,6 @@
 `timescale 1ns / 1ps
 
 //InvSubytes module taking 8bit input and assigning new, decoded 8bit output every positive clock edge
-// The lookup table is declared using the ROM memorry blocks
 //written by K. Sikorski
 
 module InvSubBytes(
@@ -11,11 +10,10 @@ module InvSubBytes(
     );
      // Define Invsbox values as a lookup table in a memory array sbox with 256 entries, eacj 8 bits wide 
     // the valeus represent a Rijandel's lookup table 
-    // case statement is utilised to create a ROM structure to initialise sbox array with specific values
+    // case statement is utilised to create a structure to initialise sbox array with specific values
     // at each address corresponding to a apporpiate entries in a lookup table 
     reg [7:0] inv_sbox [0:255];
     
-    // it's not rom but data within array is more compact 
     always @(*) // triggered whenever there is a change in a signal 
     begin   
         case(state)
@@ -296,7 +294,7 @@ module InvSubBytes(
     endcase
   end
   
-     // Assign the output value from the ROM based on the input state
+     // Assign the output value every positive clock edge 
     always @(posedge clk)
 begin
     Sstate = inv_sbox[state];
