@@ -1,29 +1,7 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 17.03.2024 03:13:14
-// Design Name: 
-// Module Name: subbytes
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 `timescale 1ns/1ns
 
-//Subytes taking 8bit input and assigning new 8bit output every positive clock edge
-// The lookup table is declared using the ROM memorry blocks
+//Subytes taking 8bit input and assigning new 8bit output every time change is detected
 //written by K. Sikorski
 
 
@@ -34,11 +12,11 @@ module SubBytes(
     );
     // Define S-box values as a lookup table in a memory array sbox with 256 entries, eacj 8 bits wide 
     // the valeus represent a Rijandel's lookup table 
-    // case statement is utilised to create a ROM structure to initialise sbox array with specific values
+    // case statement is utilised to create a structure to initialise sbox array with specific values
     // at each address corresponding to a apporpiate entries in a lookup table 
     reg [7:0] sbox [0:255];
     
-    // Populate the ROM with the S-box values using a case statement
+
      always @(*) // triggered whenever there is a change in a signal 
      begin
         case(state)
@@ -303,8 +281,8 @@ module SubBytes(
     endcase
   end
     
-    // Assign the output value from the ROM based on the input state
-    // Updated to no longer require a clock cycle to update (C Baldwin)
+    
+    // Updated to no longer require a clock cycle to update (C Baldwin) The key expantion module did not work with the clock
 
     assign Sstate = sbox[state];
 
