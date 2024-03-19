@@ -1,7 +1,15 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Engineer: Boon Kean Teo
+// Module Name: shiftrows
+// Project Name: AES (EEE6225)
+// Description: This modules perform shiftrows of the AES operation. 
+//////////////////////////////////////////////////////////////////////////////////
+
+
 module shiftrows(inbyte, clock, enable, outbyte, ready);
 
-//need to add an enable signal. Use this to XOR with the register content so when its 0, they are 0 too.
-// declare our FSM states
+// declare FSM states
 parameter IDLE = 0, ONE = 1, TWO =2, THREE =3, FOUR = 4;
 
 
@@ -12,16 +20,17 @@ input enable;
 output reg [7:0] outbyte;
 output reg ready = 0;
 
-//declare the control signals that will serve as input to multiplexers and multiplexers output
+//declare the control signals that will change depending on the state of FSM
+//different bits of control signal will be used as selection bits for multiplexers.
 reg [4:0] control = 5'b00011;
 
 //declare the 12 registers (each is 1 byte long)
 reg [7:0] d0, d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11;
 
+//declaring the output of the three 2-to-1 multiplexers
 wire [7:0] mux_output1, mux_output2, mux_output3;
 
-
-//counter that will be used to cycle through FSM
+//counter that will be used for FSM state transition
 reg [4:0] counter = 1'b0;
 
 //FSM States
@@ -39,6 +48,7 @@ if (enable == 1)begin
     counter <= counter;
     end
     
+    //The left shifting of registers and the reordering is done as the output of multiplexers are assigned to register 0, 4 and 8
     currentState <= nextState; 
     outbyte <= temp_out;
     d0 <= mux_output1;
@@ -57,7 +67,11 @@ end
 
 
 always@(*) begin
+
 case (currentState)
+
+    //In the IDLE state, the registers are being loaded with the first 12 bytes of data or when enable is not 1 yet (counter wont increase)
+    //It will change to state ONE when counter reaches 11 as that means all 12 registers are full
     IDLE: begin
         if (counter == 11) begin
             nextState <=ONE;
@@ -65,6 +79,7 @@ case (currentState)
     ready <= 0;
     end
     
+    //In ONE state, the control signal is 00011
     ONE: begin
     control <= 5'b00011;
     ready <=1;
@@ -79,6 +94,7 @@ case (currentState)
     end
     end
     
+    //In TWO state, the control signal is 00110
     TWO: begin
     control <= 5'b00110;
     ready <=1;
@@ -89,6 +105,7 @@ case (currentState)
     end
     end
     
+    //In THREE state, the control signal is 01001
     THREE: begin
     control <= 5'b01001;
     ready <=1;
@@ -101,6 +118,7 @@ case (currentState)
     end
     end
     
+    //In FOUR state, the control signal is 10000
     FOUR: begin
     control <= 5'b10000;
     ready <=1;
@@ -109,10 +127,13 @@ case (currentState)
 endcase
 end
 
+//instantiating the 2-to-1 multiplexers that is used for reordering
+//The select bits are assigned to different bits in the control signal which is changes depending on the FSM state
 mux inst1 (.s1(control[4]), .in1(d11), .in2(inbyte), .out(mux_output1));
 mux inst2 (.s1(control[3]), .in1(d11), .in2(d3), .out(mux_output2));
 mux inst3 (.s1(control[2]), .in1(d11), .in2(d7), .out(mux_output3));
 
+//instantiating the 4-to-1 multiplexers that is used to determine the output
 mux2 instance1 (.s1(control[1]), .s2(control[0]), .in1(inbyte), .in2(d3), .in3(d7), .in4(d11), .out(temp_out));
 
 endmodule

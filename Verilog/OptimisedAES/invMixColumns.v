@@ -1,33 +1,35 @@
 `timescale 1ns / 1ps
-
-/*module mixColumns(in_byte, clock, enable, out_byte_1, out_byte_2, out_byte_3, out_byte_4);
-input [7:0] in_byte;
-input [7:0] enable;
-input clock;*/
+//////////////////////////////////////////////////////////////////////////////////
+// Engineer: Boon Kean Teo
+// Module Name: invMixColumns
+// Project Name: AES (EEE6225)
+// Description: This module will perform inverse Mix Columns for the AES. It has a latency of 12 cycles and a throuhgput of 1 after.  
+//////////////////////////////////////////////////////////////////////////////////
 
 module invMixColumns(in_byte, ready, clock, enable, out_byte);
 
-
+//declaring inputs and outputs of the module
 input [7:0] in_byte;
 input [7:0] enable;
 input clock, ready;
 output reg [7:0] out_byte=0;
 
-//intermediate registers
+//intermediate registers to implement the cyclic shift registers
 reg [7:0] out_byte_1=8'b00000000;
 reg [7:0] out_byte_2=8'b00000000;
 reg [7:0] out_byte_3=8'b00000000;
 reg [7:0] out_byte_4=8'b00000000;
 
+//Counter and temporary registers
 reg [7:0] temp;
 reg [3:0] counter = 0;
 reg [23:0] temp2 = 0;
 
-// Temporary variables to store the inbtermediate result of 2^2 and 2^3
+// Temporary variables to store the intermediate result of 2^2 and 2^3
 reg [7:0] mult4;
 reg [7:0] mult8;
 
-//Counter
+//Counter for the functions to keep track of how many times it needs to call mult 2 depending on the power of 2
 integer i;
 
 
@@ -134,7 +136,8 @@ always @(posedge clock) begin
    
   
     
-    
+    //When counter reaches 4, it means that the output is ready in each of the 4 out_byte registers.
+    //The first out_byte_1 register is assigned to the output while the others are stored in temp2 and assigned to output in subsequent clock cycles
     if (counter == 4)begin
     out_byte = out_byte_1;
     end else if (counter == 5)begin
@@ -148,7 +151,7 @@ always @(posedge clock) begin
     out_byte = out_byte_1;
     end
     
-    
+    //Storing out_byte registers 2,3 and 4 in temp2 when counter is 4
     if(counter == 4)begin
     //temp2[31:24] <= out_byte_1;
     temp2[23:16] <= out_byte_2;
