@@ -3,6 +3,7 @@
 // Engineer: Boon Kean Teo
 // Module Name: shiftrows
 // Project Name: AES (EEE6225)
+// Description: This modules perform shiftrows of the AES operation. 
 //////////////////////////////////////////////////////////////////////////////////
 
 
