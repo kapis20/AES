@@ -3,6 +3,8 @@
 // Engineer: Boon Kean Teo
 // Module Name: encrypt
 // Project Name: AES (EEE6225)
+// Description: This module is a control unit for encryption. It integrates sub bytes, shift rows and mix columns to do all 10 rounds in the encryption.
+//It needs to be inputted with 8-bit key and 8-bit input message every clock cycle. 
 //////////////////////////////////////////////////////////////////////////////////
 
 
