@@ -1,66 +1,43 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 17.03.2024 02:13:45
-// Design Name: 
-// Module Name: encryption
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+// Engineer: Boon Kean Teo
+// Module Name: decrypt
+// Project Name: AES (EEE6225)
+// Description: This module is a control unit for decryption. It integrates sub bytes, shift rows and mix columns to do all 10 rounds in the decryption.
+//It needs to be inputted with 8-bit key and 8-bit input message every clock cycle. 
 //////////////////////////////////////////////////////////////////////////////////
 
 
 module decrypt(in, clock, enable, key, message);
 
+//defining the states for FSM
 parameter IDLE = 0, XOR = 1, SUBBYTE = 2, SHIFTROWS = 3, MIXCOLUMNS = 4, XOR_RK = 5;
 
-
+//defining input and output
 input [7:0] in, key;
 input clock, enable;
 output reg [127:0] message=0;
 
-//FSM States
+//Current state of FSM
 reg [2:0] currentState =IDLE; 
-reg [2:0] nextState = IDLE;
-
-//keep track of the number of rounds
-//reg [3:0] round = 0;
-
-//output ready signal when round == 10
-//output ready = 0;
 
 //counter
 reg [5:0] counter = 0;
 
-//temp results
+//temporary register to store the input to submodules
 reg [7:0] temp = 0;
 
-//variables to store the output from the sub-modules
+//temporary registers to store the output from the sub-modules
 wire [7:0] Sstate;
 wire [7:0] SR;
 wire ready_sr = 0;
 wire [7:0] MC;
-
-//input to submodules
-reg [7:0] temp;
 
 //enable for submodule
 reg en_SR = 0;
 reg [7:0] en_MC = 0;
 reg ready_MC = 0;
 
-//round counter to keep track of the rounds
-//reg [3:0] round = 0;
 
 //instantiate the sub-modules
 invSubBytes sb (.state(temp), .Sstate(Sstate));
@@ -74,8 +51,7 @@ always@(posedge clock)begin
         counter <= counter +1;
     end
     
-//assign register values for the message. Update it with the temp value
-    //message [7:0] <= temp;
+//Left shift message by 1 byte every clock cycle. Also assign the last byte with temp, which holds output of modules instantiated
     message [15:8] <= message [7:0];
     message [23:16] <= message [15:8];
     message [31:24] <= message [23:16];
@@ -96,6 +72,8 @@ end
 
 always@(*)begin
 case (currentState)
+
+    //Do nothing until enable turns high. Transitions to XOR state.
     IDLE: begin
     if (enable == 1)begin
     currentState <= XOR;
@@ -104,7 +82,8 @@ case (currentState)
     currentState <= IDLE;
     end
     end
-    
+
+    //This is the first XOR that computes XOR between original key and input
     XOR: begin
     message [7:0] <= in ^ key;
     
@@ -113,7 +92,9 @@ case (currentState)
     currentState <= SHIFTROWS;
     end 
     end
-    
+
+    //In this state, the temp is assigned to the output of SubByte module. Takes 16 clock cycles to complete because there are 16 bytes. 
+    //Transitions to XOR_RK next
     SUBBYTE: begin
     currentState <= SUBBYTE;
     message[7:0] <= Sstate;
@@ -125,7 +106,9 @@ case (currentState)
     end
     
     
-    
+    //In this state, the temp is assigned to the output of ShiftRows module. 
+    //Takes 28 clock cycles to complete because there are 16 bytes and a latency of 12 clock cycles to load the registers.
+    //Transitions to SUBBYTE next
     SHIFTROWS: begin
     currentState <= SHIFTROWS;
     en_SR <=1;
@@ -141,7 +124,10 @@ case (currentState)
     en_SR <=0;
     end
     end
-    
+
+    //In this state, the temp is assigned to the output of MixColumns module. 
+    //Takes 20 clock cycles to complete because there are 16 bytes and a latency of 4 clock cycles.
+    //Transitions to SHIFTROW next
     MIXCOLUMNS: begin
     currentState <=  MIXCOLUMNS;
     ready_MC <=1;
@@ -163,7 +149,9 @@ case (currentState)
     currentState <= SHIFTROWS;
     end
     end
-    
+
+    //This state is similar to XOR, but instead of XOR between input message and key, it XOR the temp (first byte of message) and input key (round key)
+    //Transitions to the next round which starts again from MIXCOLUMN
     XOR_RK: begin
     message [7:0] <= temp ^ key;
     
