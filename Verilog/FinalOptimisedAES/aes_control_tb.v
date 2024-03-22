@@ -5,11 +5,11 @@ module key_expansion_control_tb;
     reg clk;
     reg [7:0] input_key;
     reg [7:0] input_MixCol;
-   // wire [127:0] output_key128;
+    wire [127:0] output_key;
     //wire [3:0] round;
    
     parameter kin = 128'h2b7e151628aed2a6abf7158809cf4f3c;
-    key_expansion_control test (rst, clk, input_key,input_MixCol);
+    key_expansion_control test (rst, clk, input_key, input_MixCol, output_key);
 
     always #5 begin
         clk = !clk;
