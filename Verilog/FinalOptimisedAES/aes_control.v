@@ -2,19 +2,19 @@
 // Written and tested by C. Baldwin, K. Sikorski, B. K. Teo
 // This module controls the key expansion module based on Hamalainen's datapath design
 // and encrypt module, allowing the whole encryption of AES algorithm
-module key_expansion_control (rst, clk, input_key, MessageIn,outputKey);
+module key_expansion_control (rst, clk, input_key, MessageIn,EncryptedMessage);
 
     //declare inputs and outputs
     input rst, clk;
     input [7:0] input_key;
     input [7:0] MessageIn;
     
-    output reg [7:0] outputKey;
-
+    output reg [127:0] EncryptedMessage;
+    
     
     //delcare registers, wires and parameters
     reg select_input, select_sbox, select_last_out, select_bit_out,enable=0, done=0;
-    reg [7:0] rcon_en, round_count, roundMixColcounter =0;
+    reg [7:0] rcon_en, round_count, outputKey, roundMixColcounter =0;
     reg [3:0] fsm_count, roundMixCol=0;
     reg [3:0] counterTemp =0, round;
     reg [2:0] state;
@@ -223,17 +223,22 @@ module key_expansion_control (rst, clk, input_key, MessageIn,outputKey);
     roundMixColcounter<=2;
     inputMixCol = output_mixCol;
     roundMixCol = roundMixCol +1;
+    
+
     end
     // if statement to send one byte at a time from the right register
-    if (roundMixCol > 0 && roundMixCol <11) begin
+    if (roundMixCol > 0 && roundMixCol <10) begin
     // takes MSB each time and left shift each positive edge of clock cycle 
     outputKey <= output_keys[roundMixCol-1][127:120];
     output_keys[roundMixCol-1] <= output_keys[roundMixCol-1] <<8;
     
-    end else begin 
+    end else if (roundMixCol==0) begin 
    // first round pass cipher key to encryption module 
     outputKey = input_key;
-    end   
+    end else if(  roundMixCol==10) begin
+    //Xor for the last round to get final output
+    EncryptedMessage = inputMixCol^output_keys[roundMixCol-1];
+    end
     end
 
 endmodule
