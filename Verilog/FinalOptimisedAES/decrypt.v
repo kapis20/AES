@@ -40,7 +40,7 @@ reg ready_MC = 0;
 
 
 //instantiate the sub-modules
-invSubBytes sb (.state(temp), .Sstate(Sstate));
+InvSubBytes sb (.state(temp), .clk(clock), .Sstate(Sstate));
 invShiftRows sr (.clock(clock), .enable(en_SR), .inbyte(temp), .ready(ready_sr), .outbyte(SR));
 invMixColumns mc (.clock(clock), .enable(en_MC), .ready(ready_MC), .in_byte(temp), .out_byte(MC));
 
