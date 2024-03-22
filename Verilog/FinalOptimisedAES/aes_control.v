@@ -25,7 +25,7 @@ module key_expansion_control (rst, clk, input_key, MessageIn,outputKey);
     wire [7:0] round_key;
     wire [7:0] output_key8;
     wire [127:0] output_mixCol;
-    parameter LOAD = 0, ONE = 1, TWO = 2, THREE = 3, NORM = 4, SHIFT = 5; //params used for FSM to control input signals
+    parameter LOAD = 0, ONE = 1, TWO = 2, THREE = 3, FOUR = 4, SHIFT = 5; //params used for FSM to control input signals
 
     keyExpansion_8bit keyExpansion (input_key, round_key, clk, round_count_ke, select_input, select_sbox, select_last_out, select_bit_out, rcon_en);
     encrypt Encryption (MessageIn, clk, enable,outputKey, output_mixCol);
@@ -70,11 +70,11 @@ module key_expansion_control (rst, clk, input_key, MessageIn,outputKey);
                 
                 THREE: //complete the third state of calculations
                 begin
-                    state <= NORM;
+                    state <= FOUR;
                     fsm_count <= 0;
                 end
 
-                NORM: //calculate columns
+                FOUR: //calculate columns
                 begin
                     fsm_count <= fsm_count + 1;
                     if(fsm_count == 7) begin
@@ -177,7 +177,7 @@ module key_expansion_control (rst, clk, input_key, MessageIn,outputKey);
                 rcon_en <= 0;
             end
 
-            NORM: //enable last out to use r0 register
+            FOUR: //enable last out to use r0 register
             begin
                 select_input <= 1;
                 select_sbox <= 0;
